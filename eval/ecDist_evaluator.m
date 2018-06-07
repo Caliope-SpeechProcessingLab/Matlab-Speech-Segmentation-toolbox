@@ -1,1 +1,0 @@
-function ecDist_evaluator
