@@ -9,12 +9,19 @@ addpath('aux_Func');
 
 %SETTING string-type variables:
 
-% ¿Podrías poner una explicación de esto? ¿qué respuesta debo dar?
-% Las preguntas se pueden poner más cortas
+% Next 3 lines are questions that the program ask the user.
+% 1Âº string variable (sT) you have to set up, is a segmentation type string, which can be:
+%            -'fixed', so it will execute a fixed segmentation.
+%            -'phased', so it will execute a phased segmentation.
+% 2Âº string variable (eT) is a evaluation type string, which can be:
+%            -'eulidean distance', it will perform a euclidean distance evaluation.
+% 3Âº string variable (draw) is a visualization method string, which can be:
+%            - POR DETERMINAR....
 
-sT=input('What kind of segmentation you want to execute? ','s');
-eT=input('What kind of evaluation you want to perform? ','s');
-draw=input('What kind of plot visualization you wish? ','s');
+
+sT=input('Segmentation type: ','s');
+eT=input('Evaluation method? ','s');
+draw=input('visualization procedure: ','s');
 
 
 %Folder and audio file selection
