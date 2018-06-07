@@ -2,8 +2,6 @@
 %----------------------------------------------------------------------------------------------------------------------%
 %----------------------------------------------------------------------------------------------------------------------%
 
-
-
 addpath('segment');
 addpath('aux_Func');
 
@@ -11,26 +9,24 @@ addpath('aux_Func');
 
 %SETTING string-type variables:
 
+% ¿Podrías poner una explicación de esto? ¿qué respuesta debo dar?
+% Las preguntas se pueden poner más cortas
+
 sT=input('What kind of segmentation you want to execute? ','s');
 eT=input('What kind of evaluation you want to perform? ','s');
 draw=input('What kind of plot visualization you wish? ','s');
 
 
-%FOLDER SETTING:
+%Folder and audio file selection
 
-%Storing in a string variable the path where the analysis-folder is:
 path='data/todasJasa_Q/';
 
-%Taking a set of wav-files:
-%fileName='*.'; %(the whole wav-files in folder)
-%Taking a unique wav-file (for example):
-fileName='ba_01_S1_Q.';
-
-dirWavs=[path fileName];
+% You can use regular expresions so select specific files b*.wav 
+fileSelection='b*.wav';
 
 %Obtaining an Struct list of all wav-file. Containing their paths, name,
 %and extension.
-list = dir([dirWavs 'wav']);
+list = dir([path fileSelection]);
 nfiles=length(list);
 
 %% ------------------------------------Storing in a cell array all wav-files data:-------------------------------------------------------------------------------------%
