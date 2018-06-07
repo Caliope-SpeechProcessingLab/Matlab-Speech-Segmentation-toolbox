@@ -5,24 +5,13 @@
 addpath('segment');
 addpath('aux_Func');
 
-%% CONFIGURABLE SETTING VARIABLES:
+%% CONFIGURABLE SETTING VARIABLES:-----------------------------------------------------------------------------------------------------------%
 
 %SETTING string-type variables:
 
-% Next 3 lines are questions that the program ask the user.
-% 1º string variable (sT) you have to set up, is a segmentation type string, which can be:
-%            -'fixed', so it will execute a fixed segmentation.
-%            -'phased', so it will execute a phased segmentation.
-% 2º string variable (eT) is a evaluation type string, which can be:
-%            -'eulidean distance', it will perform a euclidean distance evaluation.
-% 3º string variable (draw) is a visualization method string, which can be:
-%            - POR DETERMINAR....
-
-
-sT=input('Segmentation type: ','s');
-eT=input('Evaluation method? ','s');
-draw=input('visualization procedure: ','s');
-
+segType=input('Segmentation type ("fixed"/"phased"): ','s'); % specifies type of segmentation.
+evalType=input('Evaluation type ("E": euclidean distance/A: arbitrary): ','s'); % specifies type of evaluation. 'e' euclidean distance will be executed.
+plotType=input('Plot procedure: ','s'); % specifies type of plot.
 
 %Folder and audio file selection
 
