@@ -12,7 +12,7 @@ addpath('plot');
 
 segType=input('Segmentation type ("fixed"/"phased"): ','s'); % specifies type of segmentation.
 evalType=input('Evaluation type ("E": euclidean distance/A: arbitrary): ','s'); % specifies type of evaluation. 'e' euclidean distance will be executed.
-plotType=input('Plot procedure: ','s'); % specifies type of plot.
+plotType=input('Plot procedure ("Lines"/"LinesE": ','s'); % specifies type of plot.
 
 %Folder and audio file selection
 
@@ -107,25 +107,26 @@ end
 %% -----------------------------------------------------VISUALIZATION--------------------------------------------------------------------------------------------------%
 
 
-if strcmpi(plotType,'Lines') && strcmpi(segType,'fixed')
+if strcmpi(plotType,'Lines')
     for ifile=1:nfiles
         h=plot_boundary_Lines(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile});
-        title(['Original signal of silable: ',speech_audios{2,ifile},' | Fixed segmentation']);
+        title(['Original signal of silable: ',speech_audios{2,ifile},' | ',segType,' segmentation'],'Interpreter','none');
         saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile}],'.png'));
         %In case you want to close figure;
         %close all;
     end 
 end
-if strcmpi(plotType,'Lines') && strcmpi(segType,'phased')
+
+
+if strcmpi(plotType,'LinesE')
     for ifile=1:nfiles
-        h=plot_boundary_Lines(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile});
-        title(['Original signal of silable: ', speech_audios{2,ifile}, ' | phased segmentation']);
-        saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile},'.png']));
+        h=plot_boundary_LinesE(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile},ecDist_per_audio{1,ifile});
+        title(['Original signal of silable: ', speech_audios{2,ifile}, ' | ',segType,' segmentation and Euclidean distance between 2 consecutive segments'],'Interpreter','none');
+        saveas(h,fullfile('../data/plotsLinesE/', ['plotLinesE_',speech_audios{2,ifile},'.png']));
         %In case you want to close figure;
         %close all;
     end 
 end
-
 
 
 
