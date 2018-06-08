@@ -36,9 +36,60 @@ function ecDist=ecDist_evaluator(x,boundaries,Fs)
     %   N|SegmentN                        Value represents espectral differences 
     %                                         between 2 consecutive segments
     
- 
+    
+%-------------------------Variable description------------------------------%
 
-
+%Configurable variables:
+%
+%   -segmentacion_tipo: string variable that indicates which kind of segmentation function you
+%                       want to use. In case it contains 'fija', a fixed
+%                       segmentation will be executed. In case it contains
+%                       'fases', the korean-type segmentation will be
+%                       executed.
+%
+%
+% Constant-value variables:
+%
+%
+% Variables within script:
+%
+%   -nSeg: scalar value that indicates the number of segments.
+%   -iniFin: integer-value array of 2 columns and nSeg rows.
+%            Those values represent the begining and ending of each segments
+%            in samples. There 2 cases where those samples are from
+%            different Fs from the original one.
+%                  -When is a fixed segmentation, those ini-fin samples
+%                  come from the original sample rate.
+%                  -When is a phase instantenous segmentation, those
+%                  ini-fin samples come from the sample rate used for the
+%                  segmentation function. Therefore, it is important to
+%                  convert them to the original ones.
+%
+%    *Storing segments:
+%
+%   -x_framedF: a matrix of nSeg rows and many columns as the length of the
+%               longest-element segment. Only for fixed segmentation.
+%   -x_framed: a cell array of nSeg cells, where in each cell there is a segment from the
+%              original signal x, with a certain length.
+%
+% External Functions:
+%
+%
+%   -results: is a matrix that contains 3 columns and nfiles rows. It contains
+%             information about the number of segments, its
+%             euclidean distance mean, and euclidean distance sum in each wav-file.
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
 % Version: 0.1   Date:04/06/2018
 % Copyrigth: Salvador Florido Llorens
 
@@ -49,14 +100,14 @@ if existe==2
     %CASO EXISTEN LOS FILTROS, LOS CARGAMOS:
     load('15_band_filters.mat');
 else
-    [filtros,N]=filterMatrix_Loader(Fs);
+    [filtros,N]=filterMatrix_Loader(16000);
     save('15_band_filters.mat','filtros');
 end
 
 
 
 
-%% -------STEP 2: Signal segment storing process in a cell array: x_segments:
+%% -------STEP 3: Signal segment storing process in a cell array: x_segments:
 
 nSeg=length(boundaries(:,1));
 x_segments=cell(1,nSeg);
@@ -68,7 +119,7 @@ end
 
 
 
-%% -------STEP 3: each segment is being 15-band filtered, and its 15-band energy is calculated and stored.----------------------------------------------------------------------------------------
+%% -------STEP 4: each segment is being 15-band filtered, and its 15-band energy is calculated and stored.----------------------------------------------------------------------------------------
 
 nBands=15;
 ecDist=zeros(nSeg-1,1);
