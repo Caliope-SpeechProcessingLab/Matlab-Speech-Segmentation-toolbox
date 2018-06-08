@@ -75,7 +75,7 @@ for i=1:length(segmentedsignal)
     end 
 end
 
-%% Step 6: Get the begining and ending point of each segment.------------------------------------------------------------------------------------
+%% Step 6: Get the begining and ending point of each segment.------------------------------------------------------------------------------------%
 
 transiciones=find(diff(segmentedsignal)~=0);
 nSeg=length(transiciones)+1;
@@ -100,3 +100,19 @@ end
 
 boundaries=[inicio final]; %¿Pos-procesado segmentos sin contenido?
 Fs_S=newFs;
+
+%% Step 7: change Fs of boundaries samples back to original input Fs.----------------------------------------------------------------------------------%
+
+conversion_factor=(Fs/newFs);
+boundaries=boundaries.*conversion_factor;
+[m,n]=size(boundaries);
+boundaries(m,n)=length(x);
+
+Fs_S=Fs;
+
+
+
+
+
+
+
