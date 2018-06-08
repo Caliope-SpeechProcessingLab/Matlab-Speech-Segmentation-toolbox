@@ -5,7 +5,7 @@ clear all
 addpath('segment');
 addpath('aux_Func');
 addpath('eval');
-
+addpath('plot');
 %% CONFIGURABLE SETTING VARIABLES:-----------------------------------------------------------------------------------------------------------%
 
 %SETTING string-type variables:
@@ -45,8 +45,9 @@ for ifile=1:nfiles
     if speech_audios{3,ifile}>16000
         newFs=16000;
         [xD]=LP_decimation_function(speech_audios{1,ifile},speech_audios{3,ifile},newFs);
-        speech_audios{3,ifile}=newFs;
         x=xD;
+        speech_audios{1,ifile}=x;
+        speech_audios{3,ifile}=newFs;
     end
 end
 %% ------------------------------------------------------SEGMENTATION--------------------------------------------------------------------------------------------------%
@@ -106,11 +107,24 @@ end
 %% -----------------------------------------------------VISUALIZATION--------------------------------------------------------------------------------------------------%
 
 
-
-
-
-
-
+if strcmpi(plotType,'Lines') && strcmpi(segType,'fixed')
+    for ifile=1:nfiles
+        h=plot_boundary_Lines(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile});
+        title(['Original signal of silable: ',speech_audios{2,ifile},' | Fixed segmentation']);
+        saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile}],'.png'));
+        %In case you want to close figure;
+        %close all;
+    end 
+end
+if strcmpi(plotType,'Lines') && strcmpi(segType,'phased')
+    for ifile=1:nfiles
+        h=plot_boundary_Lines(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile});
+        title(['Original signal of silable: ', speech_audios{2,ifile}, ' | phased segmentation']);
+        saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile},'.png']));
+        %In case you want to close figure;
+        %close all;
+    end 
+end
 
 
 
