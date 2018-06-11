@@ -16,10 +16,10 @@ plotType=input('Plot procedure ("Lines"/"LinesE": ','s'); % specifies type of pl
 
 %Folder and audio file selection
 
-path='../data/todasJasa_Q/';
+path='../data/todasJasa_AB/';
 
 % You can use regular expresions so select specific files b*.wav 
-fileSelection='b*.wav';
+fileSelection='*.wav';
 
 %Obtaining an Struct list of all wav-file. Containing their paths, name,
 %and extension.
@@ -40,7 +40,7 @@ for ifile=1:nfiles
     
 end
 
-%% ------------------------------------Adjunting Fs to Fs_standard=16000 Hz for all speech files------------------------------------------------------------------------------------------------%
+%% ------------------------------------Adjusting Fs to Fs_standard=16000 Hz for all speech files------------------------------------------------------------------------------------------------%
 for ifile=1:nfiles
     if speech_audios{3,ifile}>16000
         newFs=16000;
@@ -48,6 +48,7 @@ for ifile=1:nfiles
         x=xD;
         speech_audios{1,ifile}=x;
         speech_audios{3,ifile}=newFs;
+        Fs=newFs;
     end
 end
 %% ------------------------------------------------------SEGMENTATION--------------------------------------------------------------------------------------------------%
@@ -57,8 +58,10 @@ boundaries_per_audio=cell(3,nfiles);
 
 if strcmp(segType,'fixed')
     
+    L=(input('window length in ms: '))*(Fs/1000);
+    O=(input('window overlap in ms: '))*(Fs/1000);
     for ifile=1:nfiles
-        [boundaries,Fs_S]=fixed_segmenter(speech_audios{1,ifile},speech_audios{3,ifile});
+        [boundaries,Fs_S]=fixed_segmenter(speech_audios{1,ifile},speech_audios{3,ifile},L,O);
         boundaries_per_audio{1,ifile}=boundaries;  %Boundaries are explained on the depiction section.
         boundaries_per_audio{2,ifile}=speech_audios{2,ifile}; %File names
         boundaries_per_audio{3,ifile}=Fs_S;  %Output Frequency sampling after segmentation process 
@@ -68,14 +71,11 @@ end
 
 if strcmp(segType,'phased')
     
-    for ifile=1:nfiles
-        
+    for ifile=1:nfiles 
         [boundaries,Fs_S,NF]=phased_segmenter(speech_audios{1,ifile},speech_audios{3,ifile});
-        
         boundaries_per_audio{1,ifile}=boundaries; %Boundaries are explained on the depiction section.
         boundaries_per_audio{2,ifile}=speech_audios{2,ifile}; %File names
-        boundaries_per_audio{3,ifile}=Fs_S;  %Output Frequency sampling (of boundaries) after segmentation process
-        
+        boundaries_per_audio{3,ifile}=Fs_S;  %Output Frequency sampling (of boundaries) after segmentation process 
     end
     
 end
@@ -113,7 +113,7 @@ if strcmpi(plotType,'Lines')
         title(['Original signal of silable: ',speech_audios{2,ifile},' | ',segType,' segmentation'],'Interpreter','none');
         saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile}],'.png'));
         %In case you want to close figure;
-        %close all;
+        close all;
     end 
 end
 
@@ -124,7 +124,7 @@ if strcmpi(plotType,'LinesE')
         title(['Original signal of silable: ', speech_audios{2,ifile}, ' | ',segType,' segmentation and Euclidean distance between 2 consecutive segments'],'Interpreter','none');
         saveas(h,fullfile('../data/plotsLinesE/', ['plotLinesE_',speech_audios{2,ifile},'.png']));
         %In case you want to close figure;
-        %close all;
+        close all;
     end 
 end
 
