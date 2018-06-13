@@ -9,15 +9,15 @@ function [boundaries,Fs_S,NF]=phased_segmenter(x,Fs)
 
 %% STEP 1: Resample at 1000 Hz, needed for theta band adcquisition, by means of "LP_decimation_function".---------------------------------------------------------------------------------------------------------%       
 
- newFs=64;
-% [xD]=LP_decimation_function(x,Fs,newFs);
-%x=xD
+newFs=1000;
+[xD]=LP_decimation_function(x,Fs,newFs);
+
 
 %% STEP 2: Calculation of hilbert transform, and envelope of new decimated signal.------------------------------------------------------------
 
-xH = hilbert(x);
+xH = hilbert(xD);
 xIm=imag(xH);  %Resultado Transformada de hilbert. Calculo parte imaginaria.
-envelope=sqrt(x.^2+xIm.^2); %Envelope calculation
+envelope=sqrt(xD.^2+xIm.^2); %Envelope calculation
 
 %% STEP 3: Designing a filter which is going to be used for the segmentation process. And filtering envelope.---------------------------------------
 
@@ -25,7 +25,7 @@ envelope=sqrt(x.^2+xIm.^2); %Envelope calculation
 bandType='theta';
 %[NF,b]=segmentation_Filter(newFs,bandType);
 
-[filteredEnvelope,NF]=multiStage_segmentationFilter(envelope,Fs,newFs);
+
 %Filtering envelope.
 %filteredEnvelope=filter(b,1,envelope);
 
@@ -47,8 +47,8 @@ quad4=fasesFirstBand>=(pi/2) & fasesFirstBand<=pi;
 segmentedsignal=quad1+2*quad2+3*quad3+4*quad4;
 
 % Median filtering to avoid very small transitions
-segmentedsignal=medfilt1(segmentedsignal,5);
-
+segmentedsignal=medfilt1(segmentedsignal,40);
+segmentedsignal=round(segmentedsignal,0);
 
 
 i1=[];cnt1=1;
@@ -93,13 +93,13 @@ for i=1:nSeg
         inicio(i)=1;
     end
     if i==nSeg
-        final(i)=length(filteredEnvelope);
+        final(i)=length(xD);
         inicio(i)=final(i-1)+1;
     end
 end
 
 boundaries=[inicio final]; %¿Pos-procesado segmentos sin contenido?
-%Fs_S=newFs;
+Fs_S=newFs;
 
 %% Step 7: change Fs of boundaries samples back to original input Fs.----------------------------------------------------------------------------------%
 

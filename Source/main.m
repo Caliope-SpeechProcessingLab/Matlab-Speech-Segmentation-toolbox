@@ -1,4 +1,31 @@
-%--------------------------------------------MAIN-DEPICTION------------------------------------------------------------%
+%------------------------------------------------------MAIN----------------------------------------------------------------------------------%
+
+% Description: main.m
+% Note: to understand this description (acronism) it is assumed that you read main documentation of this project refer in...
+% This script call all block-functions that are employed in this project:
+%    -1º: Setting variables: this script provides you configuring the type of segmentation, evaluation and visualization you 
+%          may want to use.
+%    -2º: Storing in a cell array all speech wav-files: in this section the script store all wav-file you want to analyze.
+%    -3º: In case that Fs of original speech file is higher than 16000Hz, then it is reduced to 16000Hz, in order 
+%         to reduce computational complexity. This is done by menas of an auxiliar function: "LP_decimation_function.m"
+%    -4º: Segmentation: in this step each wav-file is fixed-segmented or phased segmented depending on what the user configured in 1º step. 
+%         The output of this segmentation process are segment boundaries which data structure is explained in the main documentation file. 
+%         Furthermore, this block gives us the Fs of boundary samples, and the number of filter segmentation coefficients.
+%    -5º: Evaluator: in this step, an euclidean distance approach assesment between 2 consecutive segment is perform. The output 
+%         of this code block are an array of euclidean distances that represent spectral-energy differences between 2 segments.
+%    -6º: Plotting: this block allow to visualize the result in 2 ways:
+%                      -Original x-signal with vertical dash-lines where boundary samples are located.
+%                      -Original x-signal with vertical dash-lines where boundary samples are located,
+%                       besides euclidean distance value down each vertical line.
+%
+% Version: 0.0.1 
+% Copyright 11-06-2018 
+% Author: Salvador Florido Llorens   Telecomunication department  (University of Malaga)
+% Reviewers: Ignacio Moreno Torres   Spanish department (University of Malaga)
+%            Enrique Nava Baro       Telecomunication  department (University of Malaga)
+
+
+
 %----------------------------------------------------------------------------------------------------------------------%
 %----------------------------------------------------------------------------------------------------------------------%
 clear all
@@ -16,10 +43,10 @@ plotType=input('Plot procedure ("Lines"/"LinesE": ','s'); % specifies type of pl
 
 %Folder and audio file selection
 
-path='../data/todasJasa_AB/';
+path='../data/todasJasa_Q/';
 
 % You can use regular expresions so select specific files b*.wav 
-fileSelection='*.wav';
+fileSelection='b*.wav';
 
 %Obtaining an Struct list of all wav-file. Containing their paths, name,
 %and extension.
@@ -111,7 +138,7 @@ if strcmpi(plotType,'Lines')
     for ifile=1:nfiles
         h=plot_boundary_Lines(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile});
         title(['Original signal of silable: ',speech_audios{2,ifile},' | ',segType,' segmentation'],'Interpreter','none');
-        saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile}],'.png'));
+        saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile},'.png']));
         %In case you want to close figure;
         close all;
     end 
@@ -127,11 +154,6 @@ if strcmpi(plotType,'LinesE')
         close all;
     end 
 end
-
-
-
-
-
 
 
 
