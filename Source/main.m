@@ -43,10 +43,10 @@ plotType=input('Plot procedure ("Lines"/"LinesE": ','s'); % specifies type of pl
 
 %Folder and audio file selection
 
-path='../data/todasJasa_Q/';
+path='../data/todasJasa_Nuc/';
 
 % You can use regular expresions so select specific files b*.wav 
-fileSelection='b*.wav';
+fileSelection='*.wav';
 
 %Obtaining an Struct list of all wav-file. Containing their paths, name,
 %and extension.
