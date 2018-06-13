@@ -47,12 +47,17 @@ plotType=input('Plot procedure ("Lines"/"LinesE": ','s'); % specifies type of pl
 path='../data/todasJasa_Nuc/';
 
 % You can use regular expresions so select specific files b*.wav 
-fileSelection='*.wav';
+fileSelection='b*.wav';
 
 %Obtaining an Struct list of all wav-file. Containing their paths, name,
 %and extension.
 list = dir([path fileSelection]);
 nfiles=length(list);
+
+%Creation of progress bar:
+f = waitbar(0,'1','Name','Progress Bar',...
+    'CreateCancelBtn','setappdata(gcbf,''canceling'',1)');
+setappdata(f,'canceling',0);
 
 
 %% ------------------------------------Storing in a cell array all wav-files data:-------------------------------------------------------------------------------------%
@@ -65,6 +70,12 @@ for ifile=1:nfiles
     speech_audios{1,ifile}=x;
     speech_audios{2,ifile}=list(ifile).name;
     speech_audios{3,ifile}=Fs;
+    % Check for clicked Cancel button
+    if getappdata(f,'canceling')
+        break
+    end
+    % Update waitbar and message
+    waitbar(ifile/nfiles,f,sprintf(['Speech audio storing: Processing file ',num2str(ifile)]));
     
 end
 
@@ -78,6 +89,12 @@ for ifile=1:nfiles
         speech_audios{3,ifile}=newFs;
         Fs=newFs;
     end
+    % Check for clicked Cancel button
+    if getappdata(f,'canceling')
+        break
+    end
+    % Update waitbar and message
+    waitbar(ifile/nfiles,f,sprintf(['Adjusting Fs to 16000Hz: Processing file ',num2str(ifile)]));
 end
 %% ------------------------------------------------------SEGMENTATION--------------------------------------------------------------------------------------------------%
 
@@ -93,8 +110,14 @@ if strcmp(segType,'fixed')
         boundaries_per_audio{1,ifile}=boundaries;  %Boundaries are explained on the depiction section.
         boundaries_per_audio{2,ifile}=speech_audios{2,ifile}; %File names
         boundaries_per_audio{3,ifile}=Fs_S;  %Output Frequency sampling after segmentation process 
+        % Check for clicked Cancel button
+        if getappdata(f,'canceling')
+            break
+        end
+        % Update waitbar and message
+        waitbar(ifile/nfiles,f,sprintf(['Fixed Segmentation: Processing file ',num2str(ifile)]));
     end
-    
+   
 end
 
 if strcmp(segType,'phased')
@@ -104,6 +127,12 @@ if strcmp(segType,'phased')
         boundaries_per_audio{1,ifile}=boundaries; %Boundaries are explained on the depiction section.
         boundaries_per_audio{2,ifile}=speech_audios{2,ifile}; %File names
         boundaries_per_audio{3,ifile}=Fs_S;  %Output Frequency sampling (of boundaries) after segmentation process 
+        % Check for clicked Cancel button
+        if getappdata(f,'canceling')
+            break
+        end
+        % Update waitbar and message
+        waitbar(ifile/nfiles,f,sprintf(['Phased Segmentation: Processing file ',num2str(ifile)]));
     end
     
 end
@@ -122,6 +151,12 @@ if strcmpi(evalType,'e')
         ecDist=ecDist_evaluator(speech_audios{1,ifile},boundaries_per_audio{1,ifile},boundaries_per_audio{3,ifile});
         ecDist_per_audio{1,ifile}=ecDist; %Euclidean distances per file.
         ecDist_per_audio{2,ifile}=boundaries_per_audio{2,ifile}; %File names.
+        % Check for clicked Cancel button
+        if getappdata(f,'canceling')
+            break
+        end
+        % Update waitbar and message
+        waitbar(ifile/nfiles,f,sprintf(['Euclidean distance evaluation: Processing file ',num2str(ifile)]));        
     end
     
 end
@@ -140,8 +175,14 @@ if strcmpi(plotType,'Lines')
         h=plot_boundary_Lines(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile});
         title(['Original signal of silable: ',speech_audios{2,ifile},' | ',segType,' segmentation'],'Interpreter','none');
         saveas(h,fullfile('../data/plotsLines/', ['plotLines_',speech_audios{2,ifile},'.png']));
+        % Check for clicked Cancel button
+        if getappdata(f,'canceling')
+            break
+        end
+        % Update waitbar and message
+        waitbar(ifile/nfiles,f,sprintf(['Plotting Vertical lines: Processing file ',num2str(ifile)]));         
         %In case you want to close figure;
-        close all;
+        close all; 
     end 
 end
 
@@ -151,10 +192,17 @@ if strcmpi(plotType,'LinesE')
         h=plot_boundary_LinesE(speech_audios{1,ifile}, boundaries_per_audio{1,ifile}, speech_audios{3,ifile},ecDist_per_audio{1,ifile});
         title(['Original signal of silable: ', speech_audios{2,ifile}, ' | ',segType,' segmentation and Euclidean distance between 2 consecutive segments'],'Interpreter','none');
         saveas(h,fullfile('../data/plotsLinesE/', ['plotLinesE_',speech_audios{2,ifile},'.png']));
+        % Check for clicked Cancel button
+        if getappdata(f,'canceling')
+            break
+        end
+        % Update waitbar and message
+        waitbar(ifile/nfiles,f,sprintf(['Plotting Vertical Lines plus eucDist: Processing file ',num2str(ifile)])); 
         %In case you want to close figure;
         close all;
     end 
 end
 
+delete(f)
 
 
