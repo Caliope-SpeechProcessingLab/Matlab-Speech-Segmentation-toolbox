@@ -58,8 +58,8 @@ nfiles=length(list);
 f = waitbar(0,'1','Name','Progress Bar',...
     'CreateCancelBtn','setappdata(gcbf,''canceling'',1)');
 setappdata(f,'canceling',0);
-
-
+percentage=1:(100/(5*nfiles)):100;
+i=0;
 %% ------------------------------------Storing in a cell array all wav-files data:-------------------------------------------------------------------------------------%
 speech_audios=cell(3,nfiles);
 
@@ -75,7 +75,8 @@ for ifile=1:nfiles
         break
     end
     % Update waitbar and message
-    waitbar(ifile/nfiles,f,sprintf(['Speech audio storing: Processing file ',num2str(ifile)]));
+    i=i+1;
+    waitbar(percentage(i)/(5*nfiles),f,sprintf(['(',num2str((percentage(i)/(5*nfiles))*100),'%%) Speech audio storing: Processing file ',num2str(ifile)]));
     
 end
 
@@ -94,7 +95,8 @@ for ifile=1:nfiles
         break
     end
     % Update waitbar and message
-    waitbar(ifile/nfiles,f,sprintf(['Adjusting Fs to 16000Hz: Processing file ',num2str(ifile)]));
+    i=i+1;
+    waitbar(percentage(i)/(5*nfiles),f,sprintf(['(',num2str((percentage(i)/(5*nfiles))*100),'%%) Adjusting Fs to 16000Hz: Processing file ',num2str(ifile)]));
 end
 %% ------------------------------------------------------SEGMENTATION--------------------------------------------------------------------------------------------------%
 
@@ -115,7 +117,8 @@ if strcmp(segType,'fixed')
             break
         end
         % Update waitbar and message
-        waitbar(ifile/nfiles,f,sprintf(['Fixed Segmentation: Processing file ',num2str(ifile)]));
+        i=i+1;
+        waitbar(percentage(i)/(5*nfiles),f,sprintf(['(',num2str((percentage(i)/(5*nfiles))*100),'%%) Fixed Segmentation: Processing file ',num2str(ifile)]));
     end
    
 end
@@ -132,7 +135,8 @@ if strcmp(segType,'phased')
             break
         end
         % Update waitbar and message
-        waitbar(ifile/nfiles,f,sprintf(['Phased Segmentation: Processing file ',num2str(ifile)]));
+        i=i+1;
+        waitbar(percentage(i)/(5*nfiles),f,sprintf(['(',num2str((percentage(i)/(5*nfiles))*100),'%%) Phased Segmentation: Processing file ',num2str(ifile)]));
     end
     
 end
@@ -156,7 +160,8 @@ if strcmpi(evalType,'e')
             break
         end
         % Update waitbar and message
-        waitbar(ifile/nfiles,f,sprintf(['Euclidean distance evaluation: Processing file ',num2str(ifile)]));        
+        i=i+1;
+        waitbar(percentage(i)/(5*nfiles),f,sprintf(['(',num2str((percentage(i)/(5*nfiles))*100),'%%) Euclidean distance evaluation: Processing file ',num2str(ifile)]));        
     end
     
 end
@@ -180,7 +185,8 @@ if strcmpi(plotType,'Lines')
             break
         end
         % Update waitbar and message
-        waitbar(ifile/nfiles,f,sprintf(['Plotting Vertical lines: Processing file ',num2str(ifile)]));         
+        i=i+1;
+        waitbar(percentage(i)/(5*nfiles),f,sprintf(['(',num2str((percentage(i)/(5*nfiles))*100),'%%) Plotting Vertical lines: Processing file ',num2str(ifile)]));         
         %In case you want to close figure;
         close all; 
     end 
@@ -197,7 +203,8 @@ if strcmpi(plotType,'LinesE')
             break
         end
         % Update waitbar and message
-        waitbar(ifile/nfiles,f,sprintf(['Plotting Vertical Lines plus eucDist: Processing file ',num2str(ifile)])); 
+        i=i+1;
+        waitbar(percentage(i)/(5*nfiles),f,sprintf(['(',num2str((percentage(i)/(5*nfiles))*100),'%%) Plotting V.Lines with ecDist: Processing file ',num2str(ifile)])); 
         %In case you want to close figure;
         close all;
     end 
