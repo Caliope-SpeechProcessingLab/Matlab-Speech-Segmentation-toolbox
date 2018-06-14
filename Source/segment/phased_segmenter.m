@@ -1,35 +1,47 @@
 function [boundaries,Fs_S,NF]=phased_segmenter(x,Fs)
 
-%% Description:------------------------------------------------------------------------------------------------------------------------------------
+%% ------------------------------------------phased_segmenter------------------------------------------------------------------------------------------------------------------------------------
 
-%Main idea: indexes of the instantenous phase array are identical to the
-%envelopeFiltered ones.
-%IN WORK
-%---------------------------------------------------------------------------------------------------------------------------------------------
+% Description: [boundaries,Fs_S,NF]=phased_segmenter(x,Fs)
+% Note: to understand this description (acronism) it is assumed that you read main documentation of this project refer in...
+%
+% Main idea: this script generates boundaries samples which are the beginning and ending points of segments in signal x. Those boundaries samples are chosen where x-envelope instantenous phase
+% changes its value.
+%
+% Input variables:
+%   x: double array of amplitudes values of speech wav-file.
+%   Fs: sampling frequency of x-samples.
+%
+% Output variables:
+%   boundaries: the beginning and ending segment samples from the original signal (x). 
+%   Fs_S: sampling frequency of those boundaries samples.
+%   NF:  number of coefficient required for the filter involved in segmentation.
+%
+% Programming note: indexes of the instantenous phase array are identical  to the envelopeFiltered ones.
+%
+% Version: 0.0.1 
+% Copyright 11-06-2018 
+% Author: Salvador Florido Llorens   Telecomunication department  (University of Malaga)
+% Reviewers: Ignacio Moreno Torres   Spanish department (University of Malaga)
+%            Enrique Nava Baro       Telecomunication  department (University of Malaga)
 
-%% STEP 1: Resample at 1000 Hz, needed for theta band adcquisition, by means of "LP_decimation_function".---------------------------------------------------------------------------------------------------------%       
 
- newFs=64;
-% [xD]=LP_decimation_function(x,Fs,newFs);
-%x=xD
-
-%% STEP 2: Calculation of hilbert transform, and envelope of new decimated signal.------------------------------------------------------------
+%% STEP 1: Calculation of hilbert transform, and envelope of new decimated signal.------------------------------------------------------------
 
 xH = hilbert(x);
 xIm=imag(xH);  %Resultado Transformada de hilbert. Calculo parte imaginaria.
 envelope=sqrt(x.^2+xIm.^2); %Envelope calculation
 
-%% STEP 3: Designing a filter which is going to be used for the segmentation process. And filtering envelope.---------------------------------------
+%% STEP 2: Designing a Multirate filter for theta band filtering of envelope.---------------------------------------
 
 %Designing the segmentation filter.
-bandType='theta';
 %[NF,b]=segmentation_Filter(newFs,bandType);
-
+newFs=64; %Fs of signal before theta band filtering.
 [filteredEnvelope,NF]=multiStage_segmentationFilter(envelope,Fs,newFs);
 %Filtering envelope.
 %filteredEnvelope=filter(b,1,envelope);
 
-%% STEP 4: Obtaining instantenous phase from the filtered envelope.---------------------------------------------------------------------------
+%% STEP 3: Obtaining instantenous phase from the filtered envelope.---------------------------------------------------------------------------
 
 fE = hilbert(filteredEnvelope);
 xImFb=imag(fE);
@@ -37,7 +49,7 @@ xImFb=imag(fE);
 %Four-Quadrant Inverse Tangent. To obtain phases from the 4 quadrants
 fasesFirstBand=atan2(xImFb,filteredEnvelope);    %from [-pi,pi]
 
-%% STEP 5: Obtaining an array that contains the filtered envelope indexes of a certain phase quadrant.----------------------------------------------
+%% STEP 4: Obtaining an array that contains the filtered envelope indexes of a certain phase quadrant.----------------------------------------------
 
 quad1=fasesFirstBand>=-pi & fasesFirstBand<=-(pi/2);
 quad2=fasesFirstBand>=-(pi/2) & fasesFirstBand<=-0;
@@ -75,7 +87,7 @@ for i=1:length(segmentedsignal)
     end 
 end
 
-%% Step 6: Get the begining and ending point of each segment.------------------------------------------------------------------------------------%
+%% Step 5: Get the begining and ending point of each segment.------------------------------------------------------------------------------------%
 
 transiciones=find(diff(segmentedsignal)~=0);
 nSeg=length(transiciones)+1;
@@ -101,7 +113,7 @@ end
 boundaries=[inicio final]; %¿Pos-procesado segmentos sin contenido?
 %Fs_S=newFs;
 
-%% Step 7: change Fs of boundaries samples back to original input Fs.----------------------------------------------------------------------------------%
+%% Step 6: change Fs of boundaries samples back to original input Fs.----------------------------------------------------------------------------------%
 
 conversion_factor=(Fs/newFs);
 boundaries=boundaries.*conversion_factor;

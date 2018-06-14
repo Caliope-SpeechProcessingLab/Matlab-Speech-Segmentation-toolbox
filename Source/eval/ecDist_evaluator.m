@@ -1,12 +1,23 @@
-function ecDist=ecDist_evaluator(x,boundaries,Fs)
+function [ecDist,x_segments]=ecDist_evaluator(x,boundaries,Fs)
 
 
-%% ---------------------------------------------*FUNCTION DESCRIPTION*---------------------------------------------------------------------------------------------------------%
-%----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
-%-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------%
+%% ---------------------------------------------ecDist_evaluator.m---------------------------------------------------------------------------------------------------------%
 
-
-%Euclidean distance evaluator algorithm. V.0.1
+% Description: ecDist=ecDist_evaluator(x,Boundaries,Fs)
+% Note: to understand this description (acronism) it is assumed that you read main documentation of this project refer in...
+%
+% Main idea: This script evaluates with euclidean distances how well boundary segment selections were.
+%
+% Input variables:
+%   x: double array of amplitudes values of speech wav-file.
+%   boundaries: the beginning and ending segment samples from the original signal (x). 
+%   Fs: sampling frequency of those boundaries samples.
+%
+% Output variables:
+%   ecDist: euclidean distance between 2 consecutive segments in original speech signal x.
+%   x_segments: a cell array containing double amplitude vectors for each speech signal segment.
+%
+% Programming notes:
 
     %1º) The algorithm create or load the filter coefficients, for the
     %assesment.
@@ -33,14 +44,18 @@ function ecDist=ecDist_evaluator(x,boundaries,Fs)
     %      .                                                ||
     %      .                                Euclidean distance of Ev1 with Ev2
     %      .                                                ||
-    %   N|SegmentN                        Value represents espectral differences 
+    %   N|SegmentN                        Value represents spectral differences 
     %                                         between 2 consecutive segments
     
  
 
 
-% Version: 0.1   Date:04/06/2018
-% Copyrigth: Salvador Florido Llorens
+% Version: 0.0.1 
+% Copyright 11-06-2018 
+% Author: Salvador Florido Llorens   Telecomunication department  (University of Malaga)
+% Reviewers: Ignacio Moreno Torres   Spanish department (University of Malaga)
+%            Enrique Nava Baro       Telecomunication  department (University of Malaga)
+
 
 %% ------ STEP 1: Check if filter bank coefficients are created. If so, they have to be loaded. ------------------------------------------------------------------------------------------------------%
 

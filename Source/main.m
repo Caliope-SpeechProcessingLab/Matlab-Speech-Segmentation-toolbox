@@ -3,7 +3,7 @@
 
 % Description: main.m
 % Note: to understand this description (acronism) it is assumed that you read main documentation of this project refer in...
-% This script call all block-functions that are employed in this project:
+% Main idea: This script call all block-functions that are employed in this project:
 %    -1º: Setting variables: this script provides you configuring the type of segmentation, evaluation and visualization you 
 %          may want to use.
 %    -2º: Storing in a cell array all speech wav-files: in this section the script store all wav-file you want to analyze.
@@ -40,7 +40,7 @@ addpath('plot');
 
 segType=input('Segmentation type ("fixed"/"phased"): ','s'); % specifies type of segmentation.
 evalType=input('Evaluation type ("E": euclidean distance/A: arbitrary): ','s'); % specifies type of evaluation. 'e' euclidean distance will be executed.
-plotType=input('Plot procedure ("Lines"/"LinesE": ','s'); % specifies type of plot.
+plotType=input('Plot procedure ("Lines"/"LinesE"/"No": ','s'); % specifies type of plot.
 
 %Folder and audio file selection
 
@@ -147,14 +147,21 @@ end
 %% -------------------------------------------------------EVALUATION----------------------------------------------------------------------------------------------------%
 
 %Cell array where I can store all boundaries values from all segments per wav-files:
-ecDist_per_audio=cell(2,nfiles);
+ecDist_per_audio=cell(3,nfiles);
 
 if strcmpi(evalType,'e')
     
     for ifile=1:nfiles
-        ecDist=ecDist_evaluator(speech_audios{1,ifile},boundaries_per_audio{1,ifile},boundaries_per_audio{3,ifile});
+        [ecDist,x_segments]=ecDist_evaluator(speech_audios{1,ifile},boundaries_per_audio{1,ifile},boundaries_per_audio{3,ifile});
         ecDist_per_audio{1,ifile}=ecDist; %Euclidean distances per file.
         ecDist_per_audio{2,ifile}=boundaries_per_audio{2,ifile}; %File names.
+        ecDist_per_audio{3,ifile}=x_segments; %speech signal segments.
+        
+        %Saving segments of each file:
+        file_Segments=ecDist_per_audio{3,ifile};
+        target=boundaries_per_audio{2,ifile};
+        ind= strfind(target,'.wav');
+        save(['../data/all_File_Segments/',target(1,1:ind-1),'_Segments.mat'],'file_Segments');
         % Check for clicked Cancel button
         if getappdata(f,'canceling')
             break
@@ -165,7 +172,6 @@ if strcmpi(evalType,'e')
     end
     
 end
-
 
 
 
@@ -208,6 +214,10 @@ if strcmpi(plotType,'LinesE')
         %In case you want to close figure;
         close all;
     end 
+end
+
+if strcmpi(plotType,'No')
+     
 end
 
 delete(f)
