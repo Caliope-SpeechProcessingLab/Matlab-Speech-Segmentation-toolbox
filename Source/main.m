@@ -44,7 +44,7 @@ plotType=input('Plot procedure ("Lines"/"LinesE"/"No": ','s'); % specifies type 
 
 %Folder and audio file selection
 
-path='../data/todasJasa_Nuc/';
+path='../data/';
 
 % You can use regular expresions so select specific files b*.wav 
 fileSelection='b*.wav';
