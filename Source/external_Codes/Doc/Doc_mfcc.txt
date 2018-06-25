@@ -1,0 +1,56 @@
+Este algoritmo tiene los siguientes pasos:
+
+
+1º Mete todos los parámetros de entrada excepto speech y fs en la variable in.
+
+2º Genera un banco de filtros triangulares en escala Mel y lo mete en la variable H. La estructura de H es:
+     
+          -Tantas filas como filtros tenga el banco
+          -Tantas columnas como la mitad de bins frecuenciales que se hallan requerido en sus argmentos de entrada.
+
+3º Genera el power spectrum por cada frame:
+    
+          -Tantas filas como frames tenga.
+          -Tantas columnas como la mitad de bins frecuenciales que se hallas requerido en sus argumentos de entrada.
+
+4º Multiplicacion del banco de filtro con power spectrum. Se multiplica el espectro de un frame i con un filtro j del banco,
+    y dicho resultado se pone en la posicion (ij) de la matriz..
+    Da una matriz con esta estructura:
+ 
+	  -Tantas filas como filtros tenga el banco.
+	  -Tantas columnas como frames se hallan computado.
+
+
+5º Luego le hace el logaritmo en base 10 a dicha multiplicacion.
+
+6º Y a ello le hace la transformada del coseno para extraer los coefiientes cepstrales.
+
+7º Posteriormente se le hace un liftering a dichos coeficientes por el siguiente motivo:
+
+
+   Los más altos coeficientes cepstrales proveen menor discriminacion para el reconocimiento del habla que los coeficientes cepstrales bajos
+   el lifter sinusoidal aporta menos peso a los coeficientes mayores y por ello ayuda a la discriminacion.
+   Es un filtro paso bajo, en esencia.
+
+
+8º Optativamente en caso de que se encuentre configurado se incluirá el 1º coeficiente de todos como el valor de la energía en el frame.
+
+
+
+
+
+
+Significado de los coeficientes cepstrales en frecuencias mel:
+
+
+
+It would be more accurate to say that the MFCC "capture" or "represent" the spectral envelope - 
+in the sense that two signals with a similar spectral envelope will have a similar sequence of MFCC.
+
+The MFCC coefficients themselves are not supposed to "look" like the spectral envelope when plotted. 
+After all the spectral envelope is a "big" vector (as long as the size of an analysis window),
+while the MFCC are designed to be short (a handful of coefficients). 
+The spectral envelope is highly redundant (this is a very smooth function, consecutive values are correlated), 
+while the MFCC are, by design, very little correlated.
+
+One could visualize the spectral envelope from the MFCC by inverting all steps in the process except the first one.

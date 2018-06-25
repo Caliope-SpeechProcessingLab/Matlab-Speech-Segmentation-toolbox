@@ -1,0 +1,18 @@
+
+Descripcion LPCC:
+
+
+El sistema de ecuacion recursivo que utiliza el algoritmo para calcular los cestrum coefficient a partir de los Lpc es:
+
+
+3 bucles:
+
+1º bucle (indice i): itera de frame en frame-->1 a N
+
+		2º bucle (indice m): itera de coeff LP en coeff LP-->1 a P
+
+                             3º bucle (indice k): itera de 1 hasta el indice del segundo bucle (m-1)
+
+
+
+Primer cepstrum coefficiente= -(primerLPC)+0

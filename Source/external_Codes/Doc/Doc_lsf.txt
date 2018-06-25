@@ -1,0 +1,10 @@
+
+Line spectral frequencies is a way of uniquely representing the LPC-coefficients. The motivation behind LSF transformation 
+is greater interpolation properties and robustness to quantization.
+
+The LSF values are expressed the angular frequencies or normalized frequencies of the polynomial zeroes from LPC coefficients.
+
+LSF´s usage is popular due to the good quantization characteristics and consequent efficiency of the representation. LSFs collectively 
+describe the 2 resonance conditions arising from an interconnected tube model of the human vocal tract.
+This include mouth shape and nasal cavity, and forms the basis of the underlying physuological relevance of the linear rediction representation.
+The 2 resonance conditions are those that describe the vocal tract being either fully open or fully closed at the glotis respectively.

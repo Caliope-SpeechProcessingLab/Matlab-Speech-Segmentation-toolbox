@@ -1,0 +1,8 @@
+Reflection coefficients:
+
+The reflection coefficient diplays how large part of the pressure wave moving in the tube is reflected back at the junction. For examp
+le, of the wave travelling right in tube 1, a portion expressed by k1 is reflected back to the tube 1
+, and the rest ( 1-k1) passes on to tube 2.
+
+Reflections coefficients are the menos-PARCOR coefficients in the levinson durvin recursion algorithm, that arises form resolving
+a system of equations.
