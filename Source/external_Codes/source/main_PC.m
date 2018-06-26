@@ -57,8 +57,8 @@ Fs2=speech_audios{3,indx(2)};
 %% 1º trial: MFCCS
 
 %Calculating MFCCS of 2 different signals:
-[mfccs1,indices1] = msf_mfcc(signal1,Fs1,'nfilt',40,'ncep',12);
-[mfccs2,indices2] = msf_mfcc(signal2,Fs2,'nfilt',40,'ncep',12);
+[mfccs1,indices1] = msf_mfcc(signal1,Fs1,'nfilt',40,'ncep',12,'winlen',0.025,'winstep',0.025);
+[mfccs2,indices2] = msf_mfcc(signal2,Fs2,'nfilt',40,'ncep',12,'winlen',0.025,'winstep',0.010);
 
 
 
@@ -70,11 +70,17 @@ display_frames(signal2,Fs2,indices2,speech_audios{2,indx(2)});
 %----------------------------------------------------------------------------%
 % Based on what you view in the above visualization you may want to select
 % a unique frame for both signals to compare it.
-frame_indx=23; %frame 23 por ejemplo....
+frame_indx=1; %frame 23 por ejemplo....
 
 %Comparison between 2 vectors (frame) distances:
 v1=mfccs1(frame_indx,:);
 v2=mfccs2(frame_indx,:);
+
+% Plotting first sound:
+figure; plot(v1'); xlabel('Frames');ylabel('MFCCS values'); 
+t=title(['MFCC Vector 1: ',speech_audios{2,indx(1)},' (Frame ',num2str(frame_indx),')']);
+t.Interpreter='none';
+
 
 % Plotting simple difference:
 diff12=abs(v1-v2);
@@ -87,6 +93,17 @@ euc_Dist = norm(v1 - v2)  %Compute the euclidean norm of the difference of 2 vec
 
 
 %Comparison between 2 matrixes(all frames) distances:
+
+% Plotting simple matrix: 1
+figure; pcolor(mfccs1'); xlabel('Frames');ylabel('MFCCS values'); colorbar;
+t=title(['MFCC matrix 1: ', speech_audios{2,indx(1)}]);
+t.Interpreter='none';
+
+% Plotting simple matrix: 2
+figure; pcolor(mfccs2'); xlabel('Frames');ylabel('MFCCS values'); colorbar;
+t=title(['MFCC matrix 2: ', speech_audios{2,indx(2)}]);
+t.Interpreter='none';
+
 
 % Plotting simple difference:
 nframes1=length(mfccs1(:,1));
