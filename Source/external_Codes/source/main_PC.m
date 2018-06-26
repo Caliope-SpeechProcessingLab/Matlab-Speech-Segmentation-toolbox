@@ -9,7 +9,13 @@ addpath('segment');
 addpath('aux_Func');
 addpath('plot');
 
-%% File selection: 
+%% Setting variables:
+
+disp_frames=input('Frame-by-frame visualization (1: sí; 0: no): ');
+
+
+
+%% Section 2: File selection: 
 
 
 %Case you want to change or select new wav-files:
@@ -23,7 +29,7 @@ end
 
 %Case you want those files always selected:
 
-%% Storing speech files in a cell array:
+%% Section 2: Storing speech files in a cell array:
 nfiles=length(file);
 
 speech_audios=cell(3,nfiles);
@@ -42,7 +48,7 @@ end
 
 
 
-%% Selecting 2 wav-files for comparing:
+%% Section 3: Selecting 2 wav-files for comparing:
 
 %List box. Contains all wav.files selected. For comparison select 2 files:
 filenames=file;
@@ -54,19 +60,20 @@ Fs1=speech_audios{3,indx(1)};
 signal2=speech_audios{1,indx(2)};
 Fs2=speech_audios{3,indx(2)};
 
-%% 1º trial: MFCCS
+%% Section 4: 1º trial MFCCS
 
 %Calculating MFCCS of 2 different signals:
-[mfccs1,indices1] = msf_mfcc(signal1,Fs1,'nfilt',40,'ncep',12,'winlen',0.025,'winstep',0.025);
+[mfccs1,indices1] = msf_mfcc(signal1,Fs1,'nfilt',40,'ncep',12,'winlen',0.025,'winstep',0.010);
 [mfccs2,indices2] = msf_mfcc(signal2,Fs2,'nfilt',40,'ncep',12,'winlen',0.025,'winstep',0.010);
 
 
-
-%Viewing each temporal frame (selecting vector):
-%If you don´t want to visualize it, click mouse button. But if you want to see
-%frame by frame click a keyboard button.
-display_frames(signal1,Fs1,indices1,speech_audios{2,indx(1)});
-display_frames(signal2,Fs2,indices2,speech_audios{2,indx(2)});
+if disp_frames==1
+    %Viewing each temporal frame (selecting vector):
+    %If you don´t want to visualize it, click mouse button. But if you want to see
+    %frame by frame click a keyboard button.
+    display_frames(signal1,Fs1,indices1,speech_audios{2,indx(1)});
+    display_frames(signal2,Fs2,indices2,speech_audios{2,indx(2)});
+end
 %----------------------------------------------------------------------------%
 % Based on what you view in the above visualization you may want to select
 % a unique frame for both signals to compare it.
@@ -78,7 +85,7 @@ v2=mfccs2(frame_indx,:);
 
 % Plotting first sound:
 figure; plot(v1'); xlabel('Frames');ylabel('MFCCS values'); 
-t=title(['MFCC Vector 1: ',speech_audios{2,indx(1)},' (Frame ',num2str(frame_indx),')']);
+t=title(['MFCC Vector: ',speech_audios{2,indx(1)},' (Frame ',num2str(frame_indx),')']);
 t.Interpreter='none';
 
 
