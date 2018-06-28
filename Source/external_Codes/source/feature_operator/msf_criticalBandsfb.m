@@ -12,12 +12,11 @@ barkpoints = linspace(lowbark,highbark,nfilt+2);
 
 fbank = zeros(nfilt,nfft/2);
 
-a1=0.5;
-a2=-0.5;
+a1=0.5; 
 b1=1.3;
-b2=-2.5;
+b2=2.5;
 
-coeffs=[a1 a2 b1 b2];
+coeffs=[a1 b1 b2];
 hz_coeffs = bark2hz(coeffs);
 hz_fc=bark2hz(barkpoints);
 % for i=1:nfilt+2
@@ -26,12 +25,31 @@ hz_fc=bark2hz(barkpoints);
 %     b2=barkpoint(i)-0.5; %Valor filtro 0
 %     a1=barkpoint(i)+1.3;   %Valor filtro 10^...
 % end
-% bin = 1+floor((nfft-1)*bark2hz(barkpoints)/fs);
+ bin = 1+floor((nfft-1)*hz_fc/fs);
+ bin_coeffs=1+floor((nfft-1)*hz_coeffs/fs);
+ 
 for j=1:nfilt
+    for k=1:256 %Parte izquierda funcion
+        if (k-bin(j))>-bin_coeffs(1) && (k-bin(j))<bin_coeffs(1)
+            fbank(j,k)=1;
+        end
+        if (k-bin(j))<-bin_coeffs(1) && (k-bin(j))>-bin_coeffs(3)
+            fbank(j,k)=10.^((k-bin(j))+1);
+        end
+        if (k-bin(j))<-bin_coeffs(3)
+            fbank(j,k)=0;
+        end
     
-    fbank(j,i)=
+        if (k-bin(j))<bin_coeffs(2) && (k-bin(j))>bin_coeffs(1)
+            fbank(j,k)=10.^(-3*(k-bin(j))-1);
+        end
+        if (k-bin(j))>bin_coeffs(2)
+            fbank(j,k)=0;
+        end
+    end
 end
-
+       
+       
 % our points are in Hz, but we use fft bins, so we have to convert from Hz to fft bin number
 
 
