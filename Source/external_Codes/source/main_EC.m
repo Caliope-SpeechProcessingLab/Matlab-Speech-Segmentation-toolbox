@@ -26,8 +26,8 @@ ncep=input('Numero de coeff cepstrums: ');
 
 %% Section 2: Folder file Selection. 
 
-[files1,path1] = uigetfile('../data/EC_study/Folder 1/*.wav','Select One or More Files', 'MultiSelect', 'on');
-[files2,path2] = uigetfile('../data/EC_study/Folder 2/*.wav','Select One or More Files', 'MultiSelect', 'on');
+[files1,path1] = uigetfile('../data/EC_study/Folder 2/Alveolares/*.wav','Select One or More Files', 'MultiSelect', 'on');
+[files2,path2] = uigetfile('../data/EC_study/Folder 2/Labiales/*.wav','Select One or More Files', 'MultiSelect', 'on');
 
 if isequal(files1,0)|| isequal(files2,0)
    disp('User selected Cancel');
@@ -150,7 +150,7 @@ end
 
 for i=1:minNFrames
     for j=1:ncep
-        for ifile=1:nfiles1
+        for ifile=1:nfiles2
             mfccs2=MFCCS2{1,ifile};
             s2(1,ifile)=mfccs2(i,j);
         end

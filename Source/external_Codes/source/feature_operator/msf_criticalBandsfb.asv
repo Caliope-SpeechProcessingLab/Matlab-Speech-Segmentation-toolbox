@@ -48,9 +48,7 @@ bin_l=bin_l(i1);
 i2=find(bin_h>0 && bin_h<256);
 bin_h=bin_l(i2);
 i3=find(bin_05>0 && bin_05<256);
-bin_05=bin_05(i3);
-i4=find(bin_n05>0 && bin_n05<256);
-bin_n05=bin_n05(i4);
+bin_h=bin_(i2);
 % for j=1:nfilt+2
 %    
 % end
