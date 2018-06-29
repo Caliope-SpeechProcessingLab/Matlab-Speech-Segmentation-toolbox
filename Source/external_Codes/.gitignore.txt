@@ -1,0 +1,4 @@
+*.wav
+*.fig
+*.png
+*.mat
