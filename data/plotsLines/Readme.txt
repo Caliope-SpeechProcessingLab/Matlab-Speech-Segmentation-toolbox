@@ -1,1 +1,0 @@
-Here comes all figure.png files where all boundaries are plotted as vertical lines with the original speech signal.
