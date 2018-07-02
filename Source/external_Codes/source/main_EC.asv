@@ -249,7 +249,7 @@ diffMeans=abs(means1-means2);
 
 %% Section 7: Matrix means visualization.
 
-features=['MFFC','LPC', 'LPCC', 'Spectral Subband centroids', 'Lines spectral frequencies','Log area ratios'];
+features=['MFFC','LPC', 'LPC', '];
 
 f=figure; 
 subplot(3,1,1);
