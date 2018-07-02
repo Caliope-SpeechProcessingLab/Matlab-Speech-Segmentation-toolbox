@@ -21,7 +21,7 @@
 %
 %   logfbs = msf_logfb(signal,16000,'nfilt',40,'ncep',12);
 %
-function feat = msf_logfb(speech,fs,varargin)
+function [feat,indices] = msf_logfb(speech,fs,varargin)
     p = inputParser;   
     addOptional(p,'winlen',      0.025,@(x)gt(x,0));
     addOptional(p,'winstep',     0.01, @(x)gt(x,0));
@@ -34,6 +34,6 @@ function feat = msf_logfb(speech,fs,varargin)
     parse(p,varargin{:});
     in = p.Results;
     H = msf_filterbank(in.nfilt,fs,in.lowfreq,in.highfreq,in.nfft);
-    pspec = msf_powspec(speech,fs,'winlen',in.winlen,'winstep',in.winstep,'nfft',in.nfft,'variable',in.variable);
+    [pspec,indices] = msf_powspec(speech,fs,'winlen',in.winlen,'winstep',in.winstep,'nfft',in.nfft,'variable',in.variable);
     feat = log(pspec*H');
 end

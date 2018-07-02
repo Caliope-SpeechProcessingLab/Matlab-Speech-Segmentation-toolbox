@@ -1,0 +1,14 @@
+dirInput1 ../data/EC_study/Folder 2/alveolares/*.wav Alveolares
+dirInput2 ../data/EC_study/Folder 2/labiales/*.wav Labiales
+dirOutput ../data/EC_study/Median matrizes figures
+winlen 0.025
+winstep 0.01
+mfcc 1
+lpc 1
+lpcc 0
+lsf 0
+ssc 0
+rc 1
+mfcc_nCoeffs 30
+mfcc_nFilters 40
+lpc_nCoeffs 13

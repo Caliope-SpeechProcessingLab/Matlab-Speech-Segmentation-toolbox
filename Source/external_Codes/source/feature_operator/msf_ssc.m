@@ -21,7 +21,7 @@
 %
 %   sscs = msf_ssc(signal,16000,'nfilt',40,'ncep',12);
 %
-function feat = msf_ssc(speech,fs,varargin)
+function [feat,indices] = msf_ssc(speech,fs,varargin)
     p = inputParser;   
     addOptional(p,'winlen',      0.025,@(x)gt(x,0));
     addOptional(p,'winstep',     0.01, @(x)gt(x,0));
@@ -29,11 +29,12 @@ function feat = msf_ssc(speech,fs,varargin)
     addOptional(p,'lowfreq',     0,    @(x)ge(x,0));
     addOptional(p,'highfreq',    fs/2, @(x)ge(x,0));
     addOptional(p,'nfft',        512,  @(x)gt(x,0));       
-    addOptional(p,'preemph',     0,    @(x)ge(x,0));    
+    addOptional(p,'preemph',     0,    @(x)ge(x,0));  
+    
     parse(p,varargin{:});
     in = p.Results;
     H = msf_filterbank(in.nfilt,fs,in.lowfreq,in.highfreq,in.nfft);
-    pspec = msf_powspec(speech,fs,'winlen',in.winlen,'winstep',in.winstep,'nfft',in.nfft);
+    [pspec,indices] = msf_powspec(speech,fs,'winlen',in.winlen,'winstep',in.winstep,'nfft',in.nfft);
     R = repmat(linspace(0,fs/2,in.nfft/2),size(pspec,1),1);
     feat = ((R.*pspec)*H')./ (pspec*H');
 end
