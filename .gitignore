@@ -1,9 +1,0 @@
-#OS junk files
-*.DS_Store
-
-#Sound files
-
-#OUtput
-*.mat
-*.fig
-*.png
