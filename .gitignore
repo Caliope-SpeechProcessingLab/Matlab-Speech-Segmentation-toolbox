@@ -1,0 +1,4 @@
+*.wav
+*.fig
+*.mat
+.DS_store
