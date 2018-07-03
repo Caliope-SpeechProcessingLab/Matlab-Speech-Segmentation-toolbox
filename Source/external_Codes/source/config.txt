@@ -9,6 +9,9 @@ lpcc 0
 lsf 0
 ssc 0
 rc 1
+lar 0
+logfb 0
+powspec 0
 mfcc_nCoeffs 30
-mfcc_nFilters 40
+nFilters 40
 lpc_nCoeffs 13

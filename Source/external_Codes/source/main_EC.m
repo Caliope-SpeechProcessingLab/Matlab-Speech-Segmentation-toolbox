@@ -81,83 +81,173 @@ end
 %% Section 4: Storing all MFCCs values in a cell array.
 
 
-feat1=cell(2,nfiles1);
-feat2=cell(2,nfiles2);
+parameters=a.data;
+features_names=a.textdata;
+features_names=features_names(4:end); %MOMENTO QUE PONGAS MAS COSAS ARRIBA DE LOS PARAMETROS CUIDADO
 
-parameters=a.textdata;
-features_validation=a.data;
-parameters=parameters(4:end); %MOMENTO QUE PONGAS MAS COSAS ARRIBA DE LOS PARAMETROS CUIDADO
-ind=find(features_validation==1);
+winlen=parameters(1);
+winstep=parameters(2);
+ncep=parameters(12);
+nfilt=parameters(13);
+order=parameters(14);
 
+mfcc1=cell(2,nfiles1);
+lpc1=cell(2,nfiles1);
+lpcc1=cell(2,nfiles1);
+lsf1=cell(2,nfiles1);
+ssc1=cell(2,nfiles1);
+rc1=cell(2,nfiles1);
+lar1=cell(2,nfiles1);
+logfb1=cell(2,nfiles1);
+powspec1=cell(2,nfiles1);
 for ifile=1:nfiles1
     
     speech_signal1=speech_audios1{1,ifile};
     
-    switch  parameter(ind(1))
-        case 'mfcc'
-            [feature1,indices1] = msf_mfcc(speech_signal1,speech_audios1{3,ifile},'nfilt',nfilt,'ncep',ncep,'winlen',0.025, 'winstep',0.01);
-        case 'lpc'
-            [feature1,indices1] = msf_lpc(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-        case 'lpcc'
-            [feature1,indices1] = msf_lpcc(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-        case 'lsf'
-            [feature1,indices1] = msf_lsf(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-        case 'lar'
-            [feature1,indices1] = msf_lar(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-        case 'rc'
-            [feature1,indices1] = msf_rc(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-        case 'ssc'
-            [feature1,indices1] = msf_ssc(speech_signal1,speech_audios1{3,ifile},'nfilt',nfilt,'winlen',0.025, 'winstep',0.01);
-        case 'logfb'
-            [feature1,indices1] = msf_logfb(speech_signal1,speech_audios1{3,ifile},'nfilt',nfilt,'winlen',0.025, 'winstep',0.01);
-        case 'powspec'
-            [feature1,indices1] = msf_powspec(speech_signal1,speech_audios1{3,ifile},'winlen',0.025, 'winstep',0.01);
+    if parameters(3)==1
+        [feature1_1,indices1_1] = msf_mfcc(speech_signal1,speech_audios1{3,ifile},'nfilt',nfilt,'ncep',ncep,'winlen',winlen, 'winstep',winstep);
+         disp('MFCC feature Executed');
+        mfcc1{1,ifile}=feature1_1;
+        nframes1_1=length(indices1_1(:,1));
+        mfcc1{2,ifile}=nframes1_1;
     end
-    nframes1=length(indices1(:,1));
+    if parameters(4)==1
+        [feature1_2,indices1_2] = msf_lpc(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('LPC feature Executed');
+        lpc1{1,ifile}=feature1_2;
+        nframes1_2=length(indices1_2(:,1));
+        lpc1{2,ifile}=nframes1_2;
+    end
+    if parameters(5)==1
+        [feature1_3,indices1_3] = msf_lpcc(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('LPCC feature Executed');
+        lpcc1{1,ifile}=feature1_3;
+        nframes1_3=length(indices1_3(:,1));
+        lpcc1{2,ifile}=nframes1_3;
+    end
+    if parameters(6)==1
+        [feature1_4,indices1_4] = msf_lsf(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('Lines spectral frequencies feature Executed');
+        lsf1{1,ifile}=feature1_4;
+        nframes1_4=length(indices1_4(:,1));
+        lsf1{2,ifile}=nframes1_4;
+    end
     
-    feat1{1,ifile}=feature1;
-    feat1{2,ifile}=nframes1;
-                     
+    if parameters(7)==1
+        [feature1_5,indices1_5] = msf_ssc(speech_signal1,speech_audios1{3,ifile},'nfilt',nfilt,'winlen',winlen, 'winstep',winstep);
+        disp('Spectral subband centroids feature Executed');
+        ssc1{1,ifile}=feature1_5;
+        nframes1_5=length(indices1_5(:,1));
+        ssc1{2,ifile}=nframes1_5;
+    end
+    if parameters(8)==1
+        [feature1_6,indices1_6] = msf_rc(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('Reflection coefficients feature Executed');
+        rc1{1,ifile}=feature1_6;
+        nframes1_6=length(indices1_6(:,1));
+        rc1{2,ifile}=nframes1_6;
+    end
+    if parameters(9)==1
+        [feature1_7,indices1_7] = msf_lar(speech_signal1,speech_audios1{3,ifile},'order',order,'winlen',winlen, 'winstep',winlen);
+        disp('Log area ratios feature Executed');
+        lar1{1,ifile}=feature1_7;
+        nframes1_7=length(indices1_7(:,1));
+        lar1{2,ifile}=nframes1_7;
+    end
+    if parameters(10)==1
+        [feature1_8,indices1_8] = msf_logfb(speech_signal1,speech_audios1{3,ifile},'nfilt',nfilt,'winlen',winlen, 'winstep',winstep);
+        disp('Log Filterbanks feature Executed');
+        logfb1{1,ifile}=feature1_8;
+        nframes1_8=length(indices1_8(:,1));
+        logfb1{2,ifile}=nframes1_8;
+    end
+    if parameters(11)==1
+        [feature1_9,indices1_9] = msf_powspec(speech_signal1,speech_audios1{3,ifile},'winlen',0.025, 'winstep',0.01);
+        disp('Power spectrum feature Executed');
+        powspec1{1,ifile}=feature1_9;
+        nframes1_9=length(indices1_9(:,1));
+        powspec1{2,ifile}=nframes1_9;
+    end
+    
 end
 
+mfcc2=cell(2,nfiles2);
+lpc2=cell(2,nfiles2);
+lpcc2=cell(2,nfiles2);
+lsf2=cell(2,nfiles2);
+ssc2=cell(2,nfiles2);
+rc2=cell(2,nfiles2);
+lar2=cell(2,nfiles2);
+logfb2=cell(2,nfiles2);
+powspec2=cell(2,nfiles2);
 for ifile=1:nfiles2
     
     speech_signal2=speech_audios2{1,ifile};
     
-      
-    switch feature_type
-        case 'mfcc'
-            [feature2,indices2] = msf_mfcc(speech_signal2,speech_audios2{3,ifile},'nfilt',40,'ncep',ncep,'winlen',0.025, 'winstep',0.01);
-            disp('mfcc computed');
-        case 'lpc'
-            [feature2,indices2] = msf_lpc(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-            disp('lpc computed');
-        case 'lpcc'
-            [feature2,indices2] = msf_lpcc(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-            disp('lpcc computed');
-        case 'lsf'
-            [feature2,indices2] = msf_lsf(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-            disp('lsf computed');
-        case 'lar'
-            [feature2,indices2] = msf_lar(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-            disp('lar computed');
-        case 'rc'
-            [feature2,indices2] = msf_rc(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',0.025, 'winstep',0.01);
-            disp('rc computed');
-        case 'ssc'
-            [feature2,indices2] = msf_ssc(speech_signal2,speech_audios2{3,ifile},'nfilt',nfilt,'winlen',0.025, 'winstep',0.01);
-            disp('ssc computed');
-        case 'logfb'
-            [feature2,indices2] = msf_logfb(speech_signal2,speech_audios2{3,ifile},'nfilt',nfilt,'winlen',0.025, 'winstep',0.01);
-            disp('logfb computed');
-        case 'powspec'
-            [feature2,indices2] = msf_powspec(speech_signal2,speech_audios2{3,ifile},'winlen',0.025, 'winstep',0.01);
-            disp('powspec computed');
+    if parameters(3)==1
+        [feature2_1,indices2_1] = msf_mfcc(speech_signal2,speech_audios2{3,ifile},'nfilt',nfilt,'ncep',ncep,'winlen',winlen, 'winstep',winstep);
+         disp('MFCC feature Executed');
+        mfcc2{1,ifile}=feature2_1;
+        nframes2_1=length(indices2_1(:,1));
+        mfcc2{2,ifile}=nframes2_1;
     end
-    nframes2=length(indices2(:,1));
+    if parameters(4)==1
+        [feature2_2,indices2_2] = msf_lpc(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('LPC feature Executed');
+        lpc2{1,ifile}=feature2_2;
+        nframes2_2=length(indices2_2(:,1));
+        lpc2{2,ifile}=nframes2_2;
+    end
+    if parameters(5)==1
+        [feature2_3,indices2_3] = msf_lpcc(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('LPCC feature Executed');
+        lpcc2{1,ifile}=feature2_3;
+        nframes2_3=length(indices2_3(:,1));
+        lpcc2{2,ifile}=nframes2_3;
+    end
+    if parameters(6)==1
+        [feature2_4,indices2_4] = msf_lsf(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('Lines spectral frequencies feature Executed');
+        lsf2{1,ifile}=feature2_4;
+        nframes2_4=length(indices2_4(:,1));
+        lsf2{2,ifile}=nframes2_4;
+    end
     
-    feat2{1,ifile}=feature2;
-    feat2{2,ifile}=nframes2;
+    if parameters(7)==1
+        [feature2_5,indices2_5] = msf_ssc(speech_signal2,speech_audios2{3,ifile},'nfilt',nfilt,'winlen',winlen, 'winstep',winstep);
+        disp('Spectral subband centroids feature Executed');
+        ssc2{1,ifile}=feature2_5;
+        nframes2_5=length(indices2_5(:,1));
+        ssc2{2,ifile}=nframes2_5;
+    end
+    if parameters(8)==1
+        [feature2_6,indices2_6] = msf_rc(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',winlen, 'winstep',winstep);
+        disp('Reflection coefficients feature Executed');
+        rc2{1,ifile}=feature2_6;
+        nframes2_6=length(indices2_6(:,1));
+        rc2{2,ifile}=nframes2_6;
+    end
+    if parameters(9)==1
+        [feature2_7,indices2_7] = msf_lar(speech_signal2,speech_audios2{3,ifile},'order',order,'winlen',winlen, 'winstep',winlen);
+        disp('Log area ratios feature Executed');
+        lar2{1,ifile}=feature2_7;
+        nframes2_7=length(indices2_7(:,1));
+        lar2{2,ifile}=nframes2_7;
+    end
+    if parameters(10)==1
+        [feature2_8,indices2_8] = msf_logfb(speech_signal2,speech_audios2{3,ifile},'nfilt',nfilt,'winlen',winlen, 'winstep',winstep);
+        disp('Log Filterbanks feature Executed');
+        logfb2{1,ifile}=feature2_8;
+        nframes2_8=length(indices2_8(:,1));
+        logfb2{2,ifile}=nframes2_8;
+    end
+    if parameters(11)==1
+        [feature2_9,indices2_9] = msf_powspec(speech_signal2,speech_audios2{3,ifile},'winlen',0.025, 'winstep',0.01);
+        disp('Power spectrum feature Executed');
+        powspec2{1,ifile}=feature2_9;
+        nframes2_9=length(indices2_9(:,1));
+        powspec2{2,ifile}=nframes2_9;
+    end
     
 end
 
