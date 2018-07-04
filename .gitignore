@@ -2,4 +2,5 @@
 *.fig
 *.mat
 *.png
-.DS_store
+*.txt
+.DS_Store
