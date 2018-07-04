@@ -1,4 +1,5 @@
 *.wav
 *.fig
 *.mat
+*.png
 .DS_store

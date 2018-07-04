@@ -1,2 +1,0 @@
-Here comes all figure.png files where all boundaries are plotted as vertical lines with the original speech signal, and 
-down each vertical line the euclidena distance between 2 consecutive segments is displayed..
