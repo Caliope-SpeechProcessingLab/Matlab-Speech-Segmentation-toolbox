@@ -1,6 +1,6 @@
-dirInput1	../data/EC_study/Folder 2/alveolares/*.wav Alveolares
-dirInput2	../data/EC_study/Folder 2/labiales/*.wav Labiales
-dirOutput	../data/EC_study/Outputs
+dirInput1	../data/EC_study/sonoras/*.wav Alveolares
+dirInput2	../data/EC_study/sordas/*.wav Labiales
+dirOutput	../data/EC_study/Outputs/
 
 %Features
 

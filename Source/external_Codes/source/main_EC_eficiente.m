@@ -28,15 +28,15 @@ direcciones = textscan(fid,'%s',3,'Delimiter','\n');
 
 dirIn1=direcciones{1,1}{1,1};
 dirIn1=char(dirIn1);
-k = strfind(dirIn1,'wav');
-Folder1=dirIn1(k+4:end);
+k = strfind(dirIn1,'.wav');
+Folder1=dirIn1(k+5:end);
 dirIn1=dirIn1(11:k+3);
 dir1=dir(dirIn1);
 
 dirIn2=direcciones{1,1}{2,1};
 dirIn2=char(dirIn2);
-k = strfind(dirIn2,'wav');
-Folder2=dirIn2(k+4:end);
+k = strfind(dirIn2,'.wav');
+Folder2=dirIn2(k+5:end);
 dirIn2=dirIn2(11:k+3);
 dir2=dir(dirIn2);
 
@@ -164,38 +164,46 @@ end
 
 
 
-%% Section 4:  Which is the minimum number of frames?
+%% Section 5:  Which is the minimum number of frames?
 
 minNFrames1=min(min(numberFrames1));
 minNFrames2=min(min(numberFrames2));
 minNFrames=min(minNFrames1,minNFrames2);
 
 
-%% Section 5: Calculating features means matrix. One for each set of speech files.
+%% Section 6: Calculating features means matrix. One for each set of speech files.
 array_means1=cell(1,length(chosen_features));
 array_means2=cell(1,length(chosen_features));
 for i=1:length(chosen_features)
-    feat=speech_features1(i,:);
+    
+    
     if strcmp(chosen_features(i),'msf_mfcc')
        c=func_param{i,7};
-       means1=mean_matrix(minNFrames,c,feat,nfiles1)';
-       means2=mean_matrix(minNFrames,c,feat,nfiles2)'; 
+       feat1=speech_features1(i,:);
+       means1=mean_matrix(minNFrames,c,feat1,nfiles1)';
+       feat2=speech_features2(i,:);
+       means2=mean_matrix(minNFrames,c,feat2,nfiles2)'; 
        array_means1{1,i}=means1;
        array_means2{1,i}=means2;
+       
     else
        c=func_param{i,5};
-       means1=mean_matrix(minNFrames,c,feat,nfiles1)';
-       means2=mean_matrix(minNFrames,c,feat,nfiles2)'; 
+       feat1=speech_features1(i,:);
+       means1=mean_matrix(minNFrames,c,feat1,nfiles1)';
+       feat2=speech_features2(i,:);
+       means2=mean_matrix(minNFrames,c,feat2,nfiles2)'; 
        array_means1{1,i}=means1;
        array_means2{1,i}=means2;
+       
     end
 end
 
-%% Section 6: Matrix means visualization
+%% Section 7: Matrix means visualization
 
 
 
 for i=1:length(chosen_features)
+    
    f=figure('units','normalized','outerposition',[0 0 1 1]);
    subplot(3,1,1);
    pcolor(array_means1{1,i});  c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
@@ -212,11 +220,17 @@ for i=1:length(chosen_features)
    %Saving picture:
 
    %[year month day hour minute seconds]
+   dirOut=direcciones{1,1}{3,1};
+   dirOut=char(dirOut);
+   dirOut=dirOut(11:end);
    c=clock;
-   filename=['../data/EC_study/Outputs/',num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
+   filename=[dirOut,num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
    saveas(f,filename);
 
 end
+
+%% Section 8: Storing in a table, feature for machine learning process.
+
 
 
 clear i
@@ -227,6 +241,8 @@ clear c
 clear f
 clear path1
 clear path2
-
+clear ext1
+clear ext2
+clear k
 
 

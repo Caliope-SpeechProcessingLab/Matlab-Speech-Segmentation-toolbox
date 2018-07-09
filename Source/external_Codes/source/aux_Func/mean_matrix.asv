@@ -9,7 +9,11 @@ for i=1:minNFrames
         for ifile=1:nfiles
             feature=speech_features{1,ifile};
             s(1,ifile)=feature(i,j);
+            ifile
+            i
+            j
         end
         means(i,j)=mean(s);
     end 
+    
 end
