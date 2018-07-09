@@ -23,17 +23,18 @@ addpath('aux_Func');
 addpath('plot');
 
 %Assigning folder names and paths
-a = importdata('config.txt',' ');
+fid = fopen('config.txt', 'r'); % opción rt para abrir en modo texto
+direcciones = textscan(fid,'%s',3,'Delimiter','\n');
 
-dirIn1=a.textdata;
-dirIn1=char(dirIn1(1));
+dirIn1=direcciones{1,1}{1,1};
+dirIn1=char(dirIn1);
 k = strfind(dirIn1,'wav');
 Folder1=dirIn1(k+4:end);
 dirIn1=dirIn1(11:k+3);
 dir1=dir(dirIn1);
 
-dirIn2=a.textdata;
-dirIn2=char(dirIn2(2));
+dirIn2=direcciones{1,1}{2,1};
+dirIn2=char(dirIn2);
 k = strfind(dirIn2,'wav');
 Folder2=dirIn2(k+4:end);
 dirIn2=dirIn2(11:k+3);
@@ -73,18 +74,23 @@ for ifile=1:nfiles2
 end
 
 
-%% Section 3: Storing all feature values in a cell array.
+%% Section 3: Reading feature selection data.
 
-parameters=a.data;
-features_names=a(:,1).textdata;
-features_names=features_names(4:end,1); %MOMENTO QUE PONGAS MAS COSAS ARRIBA DE LOS PARAMETROS CUIDADO
+txt_features = textscan(fid,'%s %f',9,'Delimiter','\t','CommentStyle','%');
+txt_Arguments = textscan(fid,'%s %f',5,'Delimiter','\t','CommentStyle','%');
 
-winlen=parameters(1);
-winstep=parameters(2);
-ncep=parameters(12);
-nfilt=parameters(13);
-order=parameters(14);
+%% Section 4: Storing all feature values in a cell array.
 
+parameters=txt_features{1,2};
+features_names=txt_features{1,1};
+arguments=txt_Arguments{1,2};
+
+
+winlen=arguments(1);
+winstep=arguments(2);
+ncep=arguments(3);
+nfilt=arguments(4);
+order=arguments(5);
 
 ind=find(parameters==1);
 chosen_features=string(features_names(ind));
@@ -139,7 +145,7 @@ numberFrames1=zeros(length(ind),nfiles1);
 for i=1:length(chosen_features)
     for j=1:nfiles1
         [feature,indices]=feval(chosen_features(i), speech_audios1{1,j},speech_audios1{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7});
-        disp(['Se ha ejecutado la funcion: ',chosen_features(i),'. En speech_features es la fila: ',num2str(i)]);
+        disp(['Function: ',chosen_features(i)],['speech_feature row: ',num2str(i)] );
         speech_features1{i,j}=feature; %Metemos nombre archivo
         numberFrames1(i,j)=length(indices(:,1));
     end
@@ -150,7 +156,7 @@ numberFrames2=zeros(length(ind),nfiles2);
 for i=1:length(chosen_features)
     for j=1:nfiles2
         [feature,indices]=feval(chosen_features(i), speech_audios2{1,j},speech_audios2{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7});
-        disp(['Se ha ejecutado la funcion: ',chosen_features(i),'. En speech_features es la fila: ',num2str(i)]);
+        disp(['Function: ',chosen_features(i) 'speech_feature row: ' num2str(i)]);
         speech_features2{i,j}=feature; %Metemos nombre archivo
         numberFrames2(i,j)=length(indices(:,1));
     end
@@ -213,8 +219,14 @@ for i=1:length(chosen_features)
 end
 
 
-
-
+clear i
+clear t1
+clear t2
+clear t3
+clear c
+clear f
+clear path1
+clear path2
 
 
 

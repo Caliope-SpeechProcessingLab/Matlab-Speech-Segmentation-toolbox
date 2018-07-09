@@ -1,17 +1,23 @@
-dirInput1 ../data/EC_study/Folder 2/alveolares/*.wav Alveolares
-dirInput2 ../data/EC_study/Folder 2/labiales/*.wav Labiales
-dirOutput ../data/EC_study/Outputs
-winlen 0.025
-winstep 0.01
-msf_mfcc 1
-msf_lpc 0
-msf_lpcc 1
-msf_lsf 1
-msf_rc 1
-msf_lar 1
-msf_ssc 0
-msf_logfb 0
-msf_powspec 0
-mfcc_nCoeffs 30
-nFilters 40
-lpc_nCoeffs 13
+dirInput1	../data/EC_study/Folder 2/alveolares/*.wav Alveolares
+dirInput2	../data/EC_study/Folder 2/labiales/*.wav Labiales
+dirOutput	../data/EC_study/Outputs
+
+%Features
+
+msf_mfcc	1
+msf_lpc	0
+msf_lpcc	1
+msf_lsf	1
+msf_rc	1
+msf_lar	1
+msf_ssc	0
+msf_logfb	0
+msf_powspec	0
+
+%Argumentos de los Features
+
+winlen	0.025
+winstep	0.01
+mfcc_nCoeffs	30
+nFilters	40
+lpc_nCoeffs	13
