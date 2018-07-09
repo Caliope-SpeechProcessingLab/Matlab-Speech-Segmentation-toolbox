@@ -228,11 +228,8 @@ for i=1:length(chosen_features)
    dirOut=char(dirOut);
    dirOut=dirOut(11:end);
    c=clock;
-<<<<<<< HEAD
-   filename=[dirOut,num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
-=======
    filename=[dirout,num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
->>>>>>> e607df8f84fded76fffc3c63d49c7b08b70134b3
+
    saveas(f,filename);
 
 end
