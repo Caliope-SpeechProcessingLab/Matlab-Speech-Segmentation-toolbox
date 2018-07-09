@@ -28,20 +28,24 @@ direcciones = textscan(fid,'%s',3,'Delimiter','\n');
 
 dirIn1=direcciones{1,1}{1,1};
 dirIn1=char(dirIn1);
-k = strfind(dirIn1,'wav');
-Folder1=dirIn1(k+4:end);
+k = strfind(dirIn1,'.wav');
+Folder1=dirIn1(k+5:end);
 dirIn1=dirIn1(11:k+3);
 dir1=dir(dirIn1);
 
+
+
 dirIn2=direcciones{1,1}{2,1};
 dirIn2=char(dirIn2);
-k = strfind(dirIn2,'wav');
-Folder2=dirIn2(k+4:end);
+k = strfind(dirIn2,'.wav');
+Folder2=dirIn2(k+5:end);
 dirIn2=dirIn2(11:k+3);
 dir2=dir(dirIn2);
 
  
-
+dirout=direcciones{1,1}{3,1};
+dirout=char(dirout);
+dirout=dirout(11:end);
 
 
 %% Section 2: Storing each speech file in a cell array. And Checking if lengths of the two sets of files are the same.
@@ -210,10 +214,10 @@ for i=1:length(chosen_features)
    t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
    xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
    %Saving picture:
-
+ 
    %[year month day hour minute seconds]
    c=clock;
-   filename=['../data/EC_study/Outputs/',num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
+   filename=[dirout,num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
    saveas(f,filename);
 
 end
