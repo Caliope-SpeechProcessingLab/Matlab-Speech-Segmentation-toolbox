@@ -1,3 +1,4 @@
+%Direcciones
 dirInput1	../data/EC_study/sonoras/*.wav Sonoras
 dirInput2	../data/EC_study/sordas/*.wav Sordas
 dirOutput	../data/EC_study/Outputs/

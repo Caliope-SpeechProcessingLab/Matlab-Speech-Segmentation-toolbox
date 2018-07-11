@@ -24,7 +24,7 @@ addpath('plot');
 
 %Assigning folder names and paths
 fid = fopen('config.txt', 'r'); % opción rt para abrir en modo texto
-direcciones = textscan(fid,'%s',3,'Delimiter','\n');
+direcciones = textscan(fid,'%s',3,'Delimiter','\n','CommentStyle','%');
 
 dirIn1=direcciones{1,1}{1,1};
 dirIn1=char(dirIn1);
