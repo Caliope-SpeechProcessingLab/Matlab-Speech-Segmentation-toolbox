@@ -126,8 +126,8 @@ for i=1:length(chosen_features)
       func_param{i,3}=winstep;
       func_param{i,4}='nfilt';
       func_param{i,5}=nfilt; 
-      func_param{i,6}='preemph';
-      func_param{i,7}=0; %No preemphasis default
+      func_param{i,6}='nfft';
+      func_param{i,7}=512; %No preemphasis default
       
    end
    if strcmp(chosen_features(i),'msf_powspec')
@@ -208,30 +208,46 @@ end
 
 for i=1:length(chosen_features)
     
-   f=figure('units','normalized','outerposition',[0 0 1 1]);
-   subplot(3,1,1);
-   pcolor(array_means1{1,i});  c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
-   t1=title([Folder1, ' mean matrix. Feature: ', chosen_features(i)]);t1.Interpreter='none';
-   xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
-   subplot(3,1,2);
-   pcolor(array_means2{1,i}); c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
-   t2=title([Folder2, ' mean matrix. Feature: ',chosen_features(i)]);t2.Interpreter='none';
-   xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
-   subplot(3,1,3);
-   pcolor(abs(array_means2{1,i}-array_means1{1,i})); c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
-   t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
-   xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
-   %Saving picture:
- 
-   %[year month day hour minute seconds]
-   dirOut=direcciones{1,1}{3,1};
-   dirOut=char(dirOut);
-   dirOut=dirOut(11:end);
-   c=clock;
-   filename=[dirout,num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
-
-   saveas(f,filename);
-
+    
+    if parameters(8)==1 %Que el logfb este elegido
+        f=figure('units','normalized','outerposition',[0 0 1 1]);
+        subplot(3,1,1);
+        pcolor(array_means1{1,i});  c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        t1=title([Folder1, ' mean matrix. Feature: ', chosen_features(i)]);t1.Interpreter='none';
+        xlabel('Frames');ylabel('Discrete Frequencies');
+        subplot(3,1,2);
+        pcolor(array_means2{1,i}); c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        t2=title([Folder2, ' mean matrix. Feature: ',chosen_features(i)]);t2.Interpreter='none';
+        xlabel('Frames');ylabel('Discrete Frequencies');
+        subplot(3,1,3);
+        pcolor(abs(array_means2{1,i}-array_means1{1,i})); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
+        xlabel('Frames');ylabel('Discrete Frequencies');
+    else
+        f=figure('units','normalized','outerposition',[0 0 1 1]);
+        subplot(3,1,1);
+        pcolor(array_means1{1,i});  c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        t1=title([Folder1, ' mean matrix. Feature: ', chosen_features(i)]);t1.Interpreter='none';
+        xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
+        subplot(3,1,2);
+        pcolor(array_means2{1,i}); c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        t2=title([Folder2, ' mean matrix. Feature: ',chosen_features(i)]);t2.Interpreter='none';
+        xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
+        subplot(3,1,3);
+        pcolor(abs(array_means2{1,i}-array_means1{1,i})); c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
+        xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
+        %Saving picture:
+        
+        %[year month day hour minute seconds]
+        dirOut=direcciones{1,1}{3,1};
+        dirOut=char(dirOut);
+        dirOut=dirOut(11:end);
+        c=clock;
+        filename=[dirout,num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
+        
+        saveas(f,filename);
+    end
 end
 
 %% Section 8: Storing in a table, feature for machine learning process.
