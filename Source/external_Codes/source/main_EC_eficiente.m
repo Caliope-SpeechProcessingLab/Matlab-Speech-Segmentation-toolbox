@@ -185,8 +185,12 @@ for i=1:length(chosen_features)
        c=func_param{i,7};
        feat1=speech_features1(i,:);
        means1=mean_matrix(minNFrames,c,feat1,nfiles1)';
+       means1 = normalize(means1,'range');
+        
        feat2=speech_features2(i,:);
        means2=mean_matrix(minNFrames,c,feat2,nfiles2)'; 
+       means2 = normalize(means2,'range');
+       
        array_means1{1,i}=means1;
        array_means2{1,i}=means2;
        
@@ -194,8 +198,12 @@ for i=1:length(chosen_features)
        c=func_param{i,5};
        feat1=speech_features1(i,:);
        means1=mean_matrix(minNFrames,c,feat1,nfiles1)';
+       means1 = (means1 - min(means1(:)))/(max(means1(:)) - min(means1(:))); %Normalize [0,1]
+       
        feat2=speech_features2(i,:);
        means2=mean_matrix(minNFrames,c,feat2,nfiles2)'; 
+       means2 = (means2 - min(means2(:)))/(max(means2(:)) - min(means2(:))); %Normalize [0,1]
+       
        array_means1{1,i}=means1;
        array_means2{1,i}=means2;
        
@@ -212,29 +220,29 @@ for i=1:length(chosen_features)
     if parameters(8)==1 %Que el logfb este elegido
         f=figure('units','normalized','outerposition',[0 0 1 1]);
         subplot(3,1,1);
-        pcolor(array_means1{1,i});  c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(array_means1{1,i});colormap(jet);  c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         t1=title([Folder1, ' mean matrix. Feature: ', chosen_features(i)]);t1.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
         subplot(3,1,2);
-        pcolor(array_means2{1,i}); c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(array_means2{1,i});colormap(jet); c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         t2=title([Folder2, ' mean matrix. Feature: ',chosen_features(i)]);t2.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
         subplot(3,1,3);
-        pcolor(abs(array_means2{1,i}-array_means1{1,i})); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(abs(array_means2{1,i}-array_means1{1,i}));colormap(jet); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
     else
         f=figure('units','normalized','outerposition',[0 0 1 1]);
         subplot(3,1,1);
-        pcolor(array_means1{1,i});  c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(array_means1{1,i}); colormap(jet); c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         t1=title([Folder1, ' mean matrix. Feature: ', chosen_features(i)]);t1.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
         subplot(3,1,2);
-        pcolor(array_means2{1,i}); c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(array_means2{1,i}); colormap(jet);c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         t2=title([Folder2, ' mean matrix. Feature: ',chosen_features(i)]);t2.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
         subplot(3,1,3);
-        pcolor(abs(array_means2{1,i}-array_means1{1,i})); c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(abs(array_means2{1,i}-array_means1{1,i})); colormap(jet);c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
         %Saving picture:
