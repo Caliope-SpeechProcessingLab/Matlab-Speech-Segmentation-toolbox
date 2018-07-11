@@ -180,7 +180,6 @@ array_means1=cell(1,length(chosen_features));
 array_means2=cell(1,length(chosen_features));
 for i=1:length(chosen_features)
     
-    
     if strcmp(chosen_features(i),'msf_mfcc')
        c=func_param{i,7};
        feat1=speech_features1(i,:);
