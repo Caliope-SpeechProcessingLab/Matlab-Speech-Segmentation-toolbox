@@ -185,11 +185,11 @@ for i=1:length(chosen_features)
        c=func_param{i,7};
        feat1=speech_features1(i,:);
        means1=mean_matrix(minNFrames,c,feat1,nfiles1)';
-       means1 = normalize(means1,'range');
+       means1 = (means1 - min(means1(:)))/(max(means1(:)) - min(means1(:))); %Normalize [0,1]
         
        feat2=speech_features2(i,:);
        means2=mean_matrix(minNFrames,c,feat2,nfiles2)'; 
-       means2 = normalize(means2,'range');
+       means2 = (means2 - min(means2(:)))/(max(means2(:)) - min(means2(:))); %Normalize [0,1]
        
        array_means1{1,i}=means1;
        array_means2{1,i}=means2;
