@@ -218,21 +218,10 @@ ind_inf=txt_coefficient{1,2}(1,1);
 ind_sup=txt_coefficient{1,2}(2,1);
 
 meanCoeffFeat=zeros(2,length(chosen_features));
-%Primero lo hace para todos con un mismo feature
-j=1;
-while j<=length(chosen_features) 
-    for i=1:nfiles1
-        s1(1,i)=mean(mean(speech_features1{j,i}(:,ind_inf:ind_sup))); %Compute de mean of each column, and then mean a unique row.
-    end
-    meanCoeff1=mean(s1);
-    meanCoeffFeat(1,j)=meanCoeff1(1,j);
-    
-    for i=1:nfiles2
-        s2(1,i)=mean(mean(speech_features2{j,i}(:,ind_inf:ind_sup)));
-    end
-    meanCoeff2=mean(s2);
-    meanCoeffFeat(2,j)=meanCoeff2(1,j);
-    j=j+1;
+
+for j=1:length(chosen_features)
+    meanCoeffFeat(1,j) =mean(array_means1{1,1}(ind_inf:ind_sup,:)); 
+    meanCoeffFeat(2,j) =mean(array_means2{1,1}(ind_inf:ind_sup,:)); 
 end
 
 %% Section 8: Matrix means visualization
