@@ -218,12 +218,18 @@ ind_inf=txt_coefficient{1,2}(1,1);
 ind_sup=txt_coefficient{1,2}(2,1);
 
 meanCoeffFeat=zeros(2,length(chosen_features));
-
-for j=1:length(chosen_features)
-    meanCoeffFeat(1,j) =mean(array_means1{1,1}(ind_inf:ind_sup,:)); 
-    meanCoeffFeat(2,j) =mean(array_means2{1,1}(ind_inf:ind_sup,:)); 
+if length(ind_inf:ind_sup)>1
+   for j=1:length(chosen_features)
+       meanCoeffFeat(1,j) =mean(mean(array_means1{1,1}(ind_inf:ind_sup,:)));%El primer mean hace la media de las columnas y el segundo el de ese resultadp
+       meanCoeffFeat(2,j) =mean(mean(array_means2{1,1}(ind_inf:ind_sup,:)));
+   
+   end
+else
+    for j=1:length(chosen_features)
+         meanCoeffFeat(1,j) =mean(array_means1{1,1}(ind_inf:ind_sup,:)); 
+         meanCoeffFeat(2,j) =mean(array_means2{1,1}(ind_inf:ind_sup,:)); 
+    end
 end
-
 %% Section 8: Matrix means visualization
 
 
