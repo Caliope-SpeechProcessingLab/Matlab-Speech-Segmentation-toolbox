@@ -82,6 +82,8 @@ end
 
 txt_features = textscan(fid,'%s %f',9,'Delimiter','\t','CommentStyle','%');
 txt_Arguments = textscan(fid,'%s %f',5,'Delimiter','\t','CommentStyle','%');
+txt_visualization=textscan(fid,'%s %f',2,'Delimiter','\t','CommentStyle','%');
+txt_coefficient=textscan(fid,'%s %f',2,'Delimiter','\t','CommentStyle','%');
 
 %% Section 4: Storing all feature values in a cell array.
 
@@ -209,41 +211,75 @@ for i=1:length(chosen_features)
     end
 end
 
-%% Section 7: Matrix means visualization
+%% Section 7: In case one or a set of coefficient are required to inspect:
+
+
+ind_inf=txt_coefficient{1,2}(1,1);
+ind_sup=txt_coefficient{1,2}(2,1);
+
+meanCoeffFeat=zeros(2,length(chosen_features));
+%Primero lo hace para todos con un mismo feature
+j=1;
+while j<=length(chosen_features) 
+    for i=1:nfiles1
+        s1(1,i)=mean(mean(speech_features1{j,i}(:,ind_inf:ind_sup))); %Compute de mean of each column, and then mean a unique row.
+    end
+    meanCoeff1=mean(s1);
+    meanCoeffFeat(1,j)=meanCoeff1(1,j);
+    
+    for i=1:nfiles2
+        s2(1,i)=mean(mean(speech_features2{j,i}(:,ind_inf:ind_sup)));
+    end
+    meanCoeff2=mean(s2);
+    meanCoeffFeat(2,j)=meanCoeff2(1,j);
+    j=j+1;
+end
+
+%% Section 8: Matrix means visualization
 
 
 
 for i=1:length(chosen_features)
     
+    strFormat='%s mean matrix. %s. Mean Coeff %d-%d:  %f';
     
-    if parameters(8)==1 %Que el logfb este elegido
+    if strcmp(chosen_features,'msf_logfb') %Que es el logfb este elegido
         f=figure('units','normalized','outerposition',[0 0 1 1]);
+        
         subplot(3,1,1);
         pcolor(array_means1{1,i});colormap(jet);  c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
-        t1=title([Folder1, ' mean matrix. Feature: ', chosen_features(i)]);t1.Interpreter='none';
+        t1=title(sprintf(strFormat,Folder1,chosen_features(i),ind_inf,ind_sup,meanCoeffFeat(1,i)));t1.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
+        
         subplot(3,1,2);
         pcolor(array_means2{1,i});colormap(jet); c=colorbar; c.Label.String = ['Energy(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
-        t2=title([Folder2, ' mean matrix. Feature: ',chosen_features(i)]);t2.Interpreter='none';
+        t2=title(sprintf(strFormat,Folder2,chosen_features(i),ind_inf,ind_sup,meanCoeffFeat(2,i)));t2.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
+        
         subplot(3,1,3);
         pcolor(abs(array_means2{1,i}-array_means1{1,i}));colormap(jet); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        lim = caxis; caxis([txt_visualization{1,2}(1,1) txt_visualization{1,2}(2,1)]);
         t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
     else
         f=figure('units','normalized','outerposition',[0 0 1 1]);
+        
         subplot(3,1,1);
         pcolor(array_means1{1,i}); colormap(jet); c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
-        t1=title([Folder1, ' mean matrix. Feature: ', chosen_features(i)]);t1.Interpreter='none';
+        t1=title(sprintf(strFormat,Folder1,chosen_features(i),ind_inf,ind_sup,meanCoeffFeat(1,i)));t1.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
+        
         subplot(3,1,2);
         pcolor(array_means2{1,i}); colormap(jet);c=colorbar; c.Label.String = ['Mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
-        t2=title([Folder2, ' mean matrix. Feature: ',chosen_features(i)]);t2.Interpreter='none';
+        t2=title(sprintf(strFormat,Folder2,chosen_features(i),ind_inf,ind_sup,meanCoeffFeat(2,i)));t2.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
+        
         subplot(3,1,3);
         pcolor(abs(array_means2{1,i}-array_means1{1,i})); colormap(jet);c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        lim = caxis; caxis([txt_visualization{1,2}(1,1) txt_visualization{1,2}(2,1)]);
         t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
+        
         %Saving picture:
         
         %[year month day hour minute seconds]
@@ -252,7 +288,6 @@ for i=1:length(chosen_features)
         dirOut=dirOut(11:end);
         c=clock;
         filename=[dirout,num2str(c(1)),'-',num2str(c(2)),'-',num2str(c(3)),'_',num2str(c(4)),'_',num2str(c(5)),'_',char(chosen_features(i)),'.png'];
-        
         saveas(f,filename);
     end
 end

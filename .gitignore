@@ -4,3 +4,5 @@
 *.png
 *.txt
 .DS_Store
+._*
+*.asv
