@@ -217,6 +217,7 @@ end
 ind_inf=txt_coefficient{1,2}(1,1);
 ind_sup=txt_coefficient{1,2}(2,1);
 
+
 meanCoeffFeat=zeros(2,length(chosen_features));
 if length(ind_inf:ind_sup)>1
    for j=1:length(chosen_features)
@@ -252,7 +253,7 @@ for i=1:length(chosen_features)
         xlabel('Frames');ylabel('Discrete Frequencies');
         
         subplot(3,1,3);
-        pcolor(abs(array_means2{1,i}-array_means1{1,i}));colormap(jet); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(array_means2{1,i}-array_means1{1,i});colormap(jet); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         lim = caxis; caxis([txt_visualization{1,2}(1,1) txt_visualization{1,2}(2,1)]);
         t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
@@ -270,7 +271,7 @@ for i=1:length(chosen_features)
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
         
         subplot(3,1,3);
-        pcolor(abs(array_means2{1,i}-array_means1{1,i})); colormap(jet);c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(array_means2{1,i}-array_means1{1,i}); colormap(jet);c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         lim = caxis; caxis([txt_visualization{1,2}(1,1) txt_visualization{1,2}(2,1)]);
         t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
