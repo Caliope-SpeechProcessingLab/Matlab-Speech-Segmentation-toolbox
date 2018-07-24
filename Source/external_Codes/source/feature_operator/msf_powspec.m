@@ -32,14 +32,14 @@ function [pspec,indices] = msf_powspec(speech,fs,varargin)
     parse(p,varargin{:});
     in = p.Results;
        
-        [frames,indices] = msf_framesig(speech,in.winlen*fs,in.winstep*fs,@(x)hamming(x),in.variable,fs);
+        [frames,indices] = msf_framesig(speech,in.winlen*fs,in.winstep*fs,@(x)gausswin(x),in.variable,fs);
         if isa(frames,'cell') %Cell array
             nSeg=length(indices(:,1));
             for i=1:nSeg
-            frame=(frames{1,i})';
-            pspec(i,1:in.nfft) = 1/(length(frame)*fs)*abs(fft(frame,in.nfft,2)).^2;
-            pspec = pspec(:,1:in.nfft/2);
-        end
+                frame=(frames{1,i})';
+                pspec(i,1:in.nfft) = 1/(length(frame)*fs)*abs(fft(frame,in.nfft,2)).^2;
+                pspec = pspec(:,1:in.nfft/2);
+            end
         else
             pspec = 1/(in.winlen*fs)*abs(fft(frames,in.nfft,2)).^2;
             pspec = pspec(:,1:in.nfft/2);

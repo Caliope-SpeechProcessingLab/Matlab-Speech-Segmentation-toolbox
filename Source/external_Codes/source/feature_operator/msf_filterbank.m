@@ -19,6 +19,7 @@ function fbank = msf_filterbank(nfilt,fs,lowfreq,highfreq,nfft)
     lowmel = hz2mel(lowfreq);
     highmel = hz2mel(highfreq);
     melpoints = linspace(lowmel,highmel,nfilt+2);
+    dist=melpoints(3)-melpoints(2)
     % our points are in Hz, but we use fft bins, so we have to convert from Hz to fft bin number
     
     bin = 1+floor((nfft-1)*mel2hz(melpoints)/fs);

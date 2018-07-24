@@ -25,7 +25,7 @@
 %
 %   mfccs = msf_mfcc(signal,16000,'nfilt',40,'ncep',12);
 %
-function [mfccs,indices] = msf_mfcc(speech,fs,varargin)
+function [mfccs,indices,pspec] = msf_mfcc(speech,fs,varargin)
     p = inputParser;   
     addOptional(p,'winlen',      0.025,@(x)gt(x,0));
     addOptional(p,'winstep',     0.01, @(x)gt(x,0));
@@ -41,16 +41,19 @@ function [mfccs,indices] = msf_mfcc(speech,fs,varargin)
     in = p.Results;
     H = msf_filterbank(in.nfilt, fs, in.lowfreq, in.highfreq, in.nfft);
     [pspec,indices] = msf_powspec(speech, fs, 'winlen', in.winlen, 'winstep', in.winstep, 'nfft', in.nfft);
-    en = sum(pspec,2); % energy in each frame
-    feat = dct(log(H*pspec'))';
-    mfccs = lifter(feat(:,1:in.ncep), in.liftercoeff);
+    en = sum(pspec,2)./size(pspec,2); % energy in each frame
+    %fb=10*log10(H*pspec');
+    feat = (dct(10*log10(H*pspec'),'Type',2))';
+    %.*sqrt(in.nfft/2))
+  % [ mfccs ,lift]= lifter(feat(:,1:in.ncep), in.liftercoeff);
+    mfccs=feat(:,1:in.ncep);
     if in.appendenergy
         mfccs(:,1) = log10(en);
     end
     
 end
 
-function lcep = lifter(cep,L)
+function [lcep,lift] = lifter(cep,L)
     [N,D] = size(cep);
     n = 0:D-1;
     lift = 1 + (L/2)*sin(pi*n/L);
