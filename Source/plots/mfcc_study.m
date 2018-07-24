@@ -18,7 +18,7 @@
 
 %% Section 1: Simple visualization in matrix.
 
-addpath('../Feature_operator');
+addpath('../features');
 
 % Signal:
 [signal,Fs]=audioread('../../data/audio/JASA/Q/so_01_S1.wav');
@@ -44,18 +44,15 @@ highmel=4000;
 hzMin = 700*(10.^(lowmel./2595) -1);
 hzMax=700*(10.^(highmel./2595) -1);
 %mel = 2595*log10(1+hz./700);
-[mfccs,indices,pspec] = msf_mfcc(signal,Fs,'winlen',0.025,'winstep',0.01,'lowfreq',hzMin','highfreq',hzMax,'nfilt',39,'ncep',13,'nfft',4096);%2048
+[mfccs,indices] = msf_mfcc(signal,Fs,'winlen',0.025,'winstep',0.01,'lowfreq',hzMin','highfreq',hzMax,'nfilt',39,'ncep',30,'nfft',512);%2048
 mfccs=mfccs';
-pspec=pspec';
-figure; subplot(2,1,1);
+figure; 
 
-x=abs(fft(signal,nfft)).^2;
-m=10*log10(x(1:16385));
-plot(m);
+pcolor(mfccs); colormap(jet);
 
-spectrumPraat=praat2matlab('../so_01_S1Spectrum','../spectrumPraat.mat');
-p=10*log10(abs(spectrumPraat).^2);
-subplot(2,1,2),plot(p);
+% spectrumPraat=praat2matlab('../so_01_S1Spectrum','../spectrumPraat.mat');
+% p=10*log10(abs(spectrumPraat).^2);
+% subplot(2,1,2),plot(p);
 %% Section 2: Frame by frame visualization:
 
 addpath('../Feature_operator');
