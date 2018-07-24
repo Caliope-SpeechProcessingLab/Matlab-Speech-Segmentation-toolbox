@@ -240,16 +240,20 @@ if length(ind_inf:ind_sup)>1 %Media de varios coeficientes
     
     for j=1:length(chosen_features)
         diffMeans{1,j}=array_means2{1,j}-array_means1{1,j};
-        meanCoeffFeat(1,j) =mean(mean(array_means1{1,j}(ind_inf:ind_sup,:)));%El primer mean hace la media de las columnas y el segundo el de ese resultadp
-        meanCoeffFeat(2,j) =mean(mean(array_means2{1,j}(ind_inf:ind_sup,:)));
-        meanCoeffFeat(3,j) = mean(mean(diffMeans{1,j}(ind_inf:ind_sup,:)));
+        medCoeff1=mean(array_means2{1,j}(ind_inf:ind_sup,:),2); %media de cada fila de la matriz ya que esas son los coeficientes por todos los frames.
+        medCoeff2=mean(array_means1{1,j}(ind_inf:ind_sup,:),2);
+        meanCoeffFeat(1,j) =mean(medCoeff1);%El primer mean hace la media de las columnas y el segundo el de ese resultadp
+        meanCoeffFeat(2,j) =mean(medCoeff2);
+        meanCoeffFeat(3,j) = norm(medCoeff1-medCoeff2); %Disrancia euclidea
     end
 else %Cuando es solo la media de un coeficiente
     for j=1:length(chosen_features)
         diffMeans{1,j}=array_means2{1,j}-array_means1{1,j};
-        meanCoeffFeat(1,j) =mean(array_means1{1,j}(ind_inf:ind_sup,:));
-        meanCoeffFeat(2,j) =mean(array_means2{1,j}(ind_inf:ind_sup,:));
-        meanCoeffFeat(3,j) = mean(diffMeans{1,j}(ind_inf:ind_sup,:));
+        medCoeff1=mean(array_means2{1,j}(ind_inf:ind_sup,:),2); %media de cada fila de la matriz ya que esas son los coeficientes por todos los frames.
+        medCoeff2=mean(array_means1{1,j}(ind_inf:ind_sup,:),2);
+        meanCoeffFeat(1,j) =medCoeff1;
+        meanCoeffFeat(2,j) =medCoeff2;
+        meanCoeffFeat(3,j) = medCoeff2-medCoeff1;
     end
 end
 %Media coeficientes matriz comparacion
@@ -263,7 +267,7 @@ end
 for i=1:length(chosen_features)
     
     strFormat='%s mean matrix. %s. Mean Coeff %d-%d:  %f';
-    strFormat1='Comparative mean matrix. Feature: %s. Mean Coeff %d-%d:  %f';
+    strFormat1='Comparative mean matrix. Feature: %s. Ec.dist Coeff %d-%d:  %f';
     
     if strcmp(chosen_features,'msf_logfb') %Que es el logfb este elegido
         f=figure('units','normalized','outerposition',[0 0 1 1]);
