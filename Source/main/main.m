@@ -101,8 +101,8 @@ order=arguments(5);
 ind=find(parameters==1);
 chosen_features=string(features_names(ind));
 
-func_param=cell(length(ind),7);
-
+func_param=cell(length(ind),9);
+nfft=2.^(nextpow2(length(speech_audios1{1,1})));
 for i=1:length(chosen_features) 
    if strcmp(chosen_features(i),'msf_mfcc')
       func_param{i,1}=chosen_features(i);
@@ -112,6 +112,8 @@ for i=1:length(chosen_features)
       func_param{i,5}=nfilt;
       func_param{i,6}='ncep';
       func_param{i,7}=ncep;
+      func_param{i,8}='nfft';
+      func_param{i,9}=nfft;
    end
    if strcmp(chosen_features(i),'msf_lpc') || strcmp(chosen_features(i),'msf_lpcc') || strcmp(chosen_features(i),'msf_lsf') || strcmp(chosen_features(i),'msf_rc') || strcmp(chosen_features(i),'msf_lar')
       func_param{i,1}=chosen_features(i);
@@ -137,7 +139,7 @@ for i=1:length(chosen_features)
       func_param{i,2}=winlen;
       func_param{i,3}=winstep;
       func_param{i,4}='nfft'; 
-      func_param{i,5}=512; %nfft default
+      func_param{i,5}=nfft; %nfft default
       func_param{i,6}='variable'; 
       func_param{i,7}=false; %variable frames default
    end
@@ -150,10 +152,17 @@ numberFrames1=zeros(length(ind),nfiles1);
 %Set1
 for i=1:length(chosen_features)
     for j=1:nfiles1
-        [feature,indices]=feval(chosen_features(i), speech_audios1{1,j},speech_audios1{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7});
-        disp(['Function: ',chosen_features(i)],['speech_feature row: ',num2str(i)] );
-        speech_features1{i,j}=feature; %Metemos nombre archivo
-        numberFrames1(i,j)=length(indices(:,1));
+        if strcmp(chosen_features(i),'msf_mfcc')
+            [feature,indices]=feval(chosen_features(i), speech_audios1{1,j},speech_audios1{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7},func_param{i,8},func_param{i,9});
+            disp(['Function: ',chosen_features(i)],['speech_feature row: ',num2str(i)] );
+            speech_features1{i,j}=feature; %Metemos nombre archivo
+            numberFrames1(i,j)=length(indices(:,1));
+        else
+            [feature,indices]=feval(chosen_features(i), speech_audios1{1,j},speech_audios1{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7});
+            disp(['Function: ',chosen_features(i)],['speech_feature row: ',num2str(i)] );
+            speech_features1{i,j}=feature; %Metemos nombre archivo
+            numberFrames1(i,j)=length(indices(:,1));
+        end
     end
 end
 %Set2
@@ -161,10 +170,17 @@ speech_features2=cell(length(ind),nfiles2); %Filas clasifica features y las  col
 numberFrames2=zeros(length(ind),nfiles2);
 for i=1:length(chosen_features)
     for j=1:nfiles2
-        [feature,indices]=feval(chosen_features(i), speech_audios2{1,j},speech_audios2{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7});
-        disp(['Function: ',chosen_features(i) 'speech_feature row: ' num2str(i)]);
-        speech_features2{i,j}=feature; %Metemos nombre archivo
-        numberFrames2(i,j)=length(indices(:,1));
+        if strcmp(chosen_features(i),'msf_mfcc')
+            [feature,indices]=feval(chosen_features(i), speech_audios2{1,j},speech_audios2{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7},func_param{i,8},func_param{i,9});
+            disp(['Function: ',chosen_features(i) 'speech_feature row: ' num2str(i)]);
+            speech_features2{i,j}=feature; %Metemos nombre archivo
+            numberFrames2(i,j)=length(indices(:,1));
+        else
+            [feature,indices]=feval(chosen_features(i), speech_audios2{1,j},speech_audios2{3,j},func_param{i,2},func_param{i,3},func_param{i,4},func_param{i,5},func_param{i,6},func_param{i,7});
+            disp(['Function: ',chosen_features(i) 'speech_feature row: ' num2str(i)]);
+            speech_features2{i,j}=feature; %Metemos nombre archivo
+            numberFrames2(i,j)=length(indices(:,1));
+        end
     end
 end
 
