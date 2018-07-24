@@ -1,9 +1,0 @@
-p = inputParser;   
-    addOptional(p,'winlen',0.025,@isnumeric); 
-    addOptional(p,'winstep',0.01,@isnumeric);
-    addOptional(p,'nfft',512,@isnumeric); 
-    parse(p,varargin{:});
-    in = p.Results;
-
-
-Explicacion:

@@ -1,7 +1,0 @@
-Log area ratios:
-
-They are related with tube areas from the lossle tube model of speech generation.
-
-lar_i=log(A_(i+1)/A_i)=log((1-reflecTCoeff_i)/(1+reflecTCoeff_i));
-
-They are also intrincly realted with the reflection coefficients.
