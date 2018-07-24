@@ -131,7 +131,7 @@ for i=1:length(chosen_features)
       func_param{i,4}='nfilt';
       func_param{i,5}=nfilt; 
       func_param{i,6}='nfft';
-      func_param{i,7}=512; %No preemphasis default
+      func_param{i,7}=nfft; %No preemphasis default
       
    end
    if strcmp(chosen_features(i),'msf_powspec')
@@ -234,19 +234,28 @@ ind_inf=txt_coefficient{1,2}(1,1);
 ind_sup=txt_coefficient{1,2}(2,1);
 
 
-meanCoeffFeat=zeros(2,length(chosen_features));
-if length(ind_inf:ind_sup)>1
-   for j=1:length(chosen_features)
-       meanCoeffFeat(1,j) =mean(mean(array_means1{1,j}(ind_inf:ind_sup,:)));%El primer mean hace la media de las columnas y el segundo el de ese resultadp
-       meanCoeffFeat(2,j) =mean(mean(array_means2{1,j}(ind_inf:ind_sup,:)));
-   
-   end
-else
+meanCoeffFeat=zeros(3,length(chosen_features));
+diffMeans=cell(1,length(chosen_features));
+if length(ind_inf:ind_sup)>1 %Media de varios coeficientes
+    
     for j=1:length(chosen_features)
-         meanCoeffFeat(1,j) =mean(array_means1{1,j}(ind_inf:ind_sup,:)); 
-         meanCoeffFeat(2,j) =mean(array_means2{1,j}(ind_inf:ind_sup,:)); 
+        diffMeans{1,j}=array_means2{1,j}-array_means1{1,j};
+        meanCoeffFeat(1,j) =mean(mean(array_means1{1,j}(ind_inf:ind_sup,:)));%El primer mean hace la media de las columnas y el segundo el de ese resultadp
+        meanCoeffFeat(2,j) =mean(mean(array_means2{1,j}(ind_inf:ind_sup,:)));
+        meanCoeffFeat(3,j) = mean(mean(diffMeans{1,j}(ind_inf:ind_sup,:)));
+    end
+else %Cuando es solo la media de un coeficiente
+    for j=1:length(chosen_features)
+        diffMeans{1,j}=array_means2{1,j}-array_means1{1,j};
+        meanCoeffFeat(1,j) =mean(array_means1{1,j}(ind_inf:ind_sup,:));
+        meanCoeffFeat(2,j) =mean(array_means2{1,j}(ind_inf:ind_sup,:));
+        meanCoeffFeat(3,j) = mean(diffMeans{1,j}(ind_inf:ind_sup,:));
     end
 end
+%Media coeficientes matriz comparacion
+
+
+
 %% Section 8: Matrix means visualization
 
 
@@ -254,6 +263,7 @@ end
 for i=1:length(chosen_features)
     
     strFormat='%s mean matrix. %s. Mean Coeff %d-%d:  %f';
+    strFormat1='Comparative mean matrix. Feature: %s. Mean Coeff %d-%d:  %f';
     
     if strcmp(chosen_features,'msf_logfb') %Que es el logfb este elegido
         f=figure('units','normalized','outerposition',[0 0 1 1]);
@@ -269,9 +279,9 @@ for i=1:length(chosen_features)
         xlabel('Frames');ylabel('Discrete Frequencies');
         
         subplot(3,1,3);
-        pcolor(array_means2{1,i}-array_means1{1,i});colormap(jet); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(diffMeans{1,i});colormap(jet); c=colorbar; c.Label.String = ['Difference mean(dB) ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         lim = caxis; caxis([txt_visualization{1,2}(1,1) txt_visualization{1,2}(2,1)]);
-        t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
+        t3=title(sprintf(strFormat1,chosen_features(i),ind_inf,ind_sup,meanCoeffFeat(3,i)));t3.Interpreter='none';
         xlabel('Frames');ylabel('Discrete Frequencies');
     else
         f=figure('units','normalized','outerposition',[0 0 1 1]);
@@ -287,9 +297,9 @@ for i=1:length(chosen_features)
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
         
         subplot(3,1,3);
-        pcolor(array_means2{1,i}-array_means1{1,i}); colormap(jet);c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
+        pcolor(diffMeans{1,i}); colormap(jet);c=colorbar; c.Label.String = ['Difference mean ', chosen_features(i), ' values'];c.Label.Interpreter='none';
         lim = caxis; caxis([txt_visualization{1,2}(1,1) txt_visualization{1,2}(2,1)]);
-        t3=title(['Comparative mean matrix. Feature: ',chosen_features(i)]);t3.Interpreter='none';
+        t3=title(sprintf(strFormat1,chosen_features(i),ind_inf,ind_sup,meanCoeffFeat(3,i)));t3.Interpreter='none';
         xlabel('Frames');ylabel(['Ordinary number of coefficient: ', chosen_features(i)]);
         
         %Saving picture:
