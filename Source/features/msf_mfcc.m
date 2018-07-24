@@ -41,9 +41,9 @@ function [mfccs,indices] = msf_mfcc(speech,fs,varargin)
     in = p.Results;
     H = msf_filterbank(in.nfilt, fs, in.lowfreq, in.highfreq, in.nfft);
     [pspec,indices] = msf_powspec(speech, fs, 'winlen', in.winlen, 'winstep', in.winstep, 'nfft', in.nfft);
-    en = sum(pspec,2)./size(pspec,2); % energy in each frame
+    en = sum(pspec,2); % energy in each frame
     %fb=10*log10(H*pspec');
-    feat = (dct(log10(H*pspec')))';
+    feat = (dct(log(H*pspec')))';
     %.*sqrt(in.nfft/2))
     mfccs = lifter(feat(:,1:in.ncep), in.liftercoeff);
     %mfccs=feat(:,1:in.ncep);
