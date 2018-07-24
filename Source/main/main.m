@@ -17,10 +17,10 @@
 clear all
 
 
-addpath('Feature_operator');
-addpath('segment');
-addpath('aux_Func');
-addpath('plot');
+addpath('../features');
+addpath('../segments');
+addpath('../aux_Func');
+addpath('../plots');
 
 %Assigning folder names and paths
 fid = fopen('config.txt', 'r'); % opción rt para abrir en modo texto
